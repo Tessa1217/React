@@ -52,7 +52,7 @@ public class Form extends CommonSystemField {
 
   public void addQuestion(Question question) {
     questionList.add(question);
-    question.setForm(this);
+    question.assignForm(this);
   }
   
 }
