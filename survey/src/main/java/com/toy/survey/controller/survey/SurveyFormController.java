@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.toy.survey.dto.surveyForm.FormRequest;
+import com.toy.survey.service.SurveyFormService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,6 +20,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RestController
 public class SurveyFormController {
+
+  private final SurveyFormService surveyFormService;
 
   @GetMapping("/list")
   public ResponseEntity<?> getSurveyList() {
@@ -32,6 +35,7 @@ public class SurveyFormController {
 
   @PostMapping("/ins")
   public ResponseEntity<?> insSurvey(@RequestBody FormRequest formRequest) {
+    surveyFormService.saveSurvey(formRequest);
     return ResponseEntity.ok().build();
   }
 

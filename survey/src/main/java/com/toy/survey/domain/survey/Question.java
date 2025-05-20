@@ -1,5 +1,6 @@
 package com.toy.survey.domain.survey;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.toy.survey.domain.code.Code;
@@ -16,9 +17,18 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "question")
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Question extends CommonSystemField {
   
   @Id
@@ -46,16 +56,27 @@ public class Question extends CommonSystemField {
   @JoinColumn(name = "option_set_id", referencedColumnName = "id")
   private OptionSet optionSet;
 
+  @Builder.Default
   @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<OptionItem> optionList;
+  private List<OptionItem> optionList = new ArrayList<>();
 
   public void assignForm(Form form) {
     this.form = form;
   }
 
+  public void addOptions(List<OptionItem> options) {
+    for (OptionItem option : options) {
+      addOption(option);
+    }
+  }
+
+  public void setQuestionTypeCode(Code code) {
+    this.questionType = code;
+  }
+
   public void addOption(OptionItem optionItem) {
-    optionList.add(optionItem);
     optionItem.assignQuestion(this);
+    optionList.add(optionItem);    
   }
 
 }

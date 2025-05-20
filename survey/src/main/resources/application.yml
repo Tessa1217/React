@@ -4,8 +4,8 @@ server:
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/survey?useSSL=false
-    username:
-    password:
+    username: root
+    password: fusion!@34
   jpa:
     open-in-view: false
     hibernate:

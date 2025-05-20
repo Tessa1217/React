@@ -1,6 +1,7 @@
 package com.toy.survey.domain.survey;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.toy.survey.domain.common.CommonSystemField;
@@ -18,9 +19,18 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "form")
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Form extends CommonSystemField {
 
   @Id
@@ -47,12 +57,23 @@ public class Form extends CommonSystemField {
   @Column
   private LocalDateTime expiresAt;
 
+  @Builder.Default
   @OneToMany(mappedBy = "form", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Question> questionList;
+  private List<Question> questionList = new ArrayList<>();
+
+  public void addQuestions(List<Question> questions) {
+    for (Question question : questions) {
+      addQuestion(question);
+    }
+  }
 
   public void addQuestion(Question question) {
-    questionList.add(question);
     question.assignForm(this);
+    questionList.add(question);    
+  }
+
+  public void setUser(User user) {
+    this.user = user;
   }
   
 }

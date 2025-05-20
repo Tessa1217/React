@@ -8,15 +8,15 @@ import lombok.Getter;
 @Getter
 public enum QuestionType {
   
-  SHORT_ANSWER("short_answer"),
+  MULTIPLE_CHOICE("MULTIPLE_CHOICE"),
 
-  PARAGRAPH("paragraph"),
+  SHORT_ANSWER("SHORT_ANSWER"),
 
-  MULTIPLE_CHOICE("multiple_choice"),
+  PARAGRAPH("PARAGRAPH"),
 
-  CHECKBOX("checkbox"),
+  CHECKBOX("CHECKBOX"),
 
-  DROPDOWN("dropdown");
+  DROPDOWN("DROPDOWN");
 
   private final String code;
 
@@ -38,14 +38,5 @@ public enum QuestionType {
     }
     throw new IllegalArgumentException("Invalid QuestionType: " + code);
   }  
-
-  // public static QuestionType fromCode(String code) {
-  //   for (QuestionType type : QuestionType.values()) {
-  //     if (type.code.equalsIgnoreCase(code)) {
-  //       return type;
-  //     }
-  //   }
-  //   throw new IllegalArgumentException("Invalid QuestionType: " + code);
-  // }
 
 }
