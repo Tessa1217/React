@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FormRequest {
+public class FormReq {
   
   private String title;
 
@@ -28,7 +28,7 @@ public class FormRequest {
 
   private LocalDateTime expiresAt;
 
-  private List<QuestionRequest> questionList;
+  private List<QuestionReq> questionList;
 
   public Form toEntity() {
 

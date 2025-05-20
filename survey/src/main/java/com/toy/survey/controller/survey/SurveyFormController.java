@@ -1,5 +1,8 @@
 package com.toy.survey.controller.survey;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.toy.survey.dto.surveyForm.FormRequest;
+import com.toy.survey.dto.surveyForm.FormReq;
 import com.toy.survey.service.SurveyFormService;
 
 import lombok.RequiredArgsConstructor;
@@ -24,17 +27,17 @@ public class SurveyFormController {
   private final SurveyFormService surveyFormService;
 
   @GetMapping("/list")
-  public ResponseEntity<?> getSurveyList() {
-    return ResponseEntity.ok().body(null);
+  public ResponseEntity<?> getSurveyList(@PageableDefault(page = 0, size = 10) Pageable pageable) {    
+    return ResponseEntity.ok().body(surveyFormService.getSurveyFormList(pageable));
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<?> getSurvey(@PathVariable Long id) {
-    return ResponseEntity.ok().body(null);
+    return ResponseEntity.ok().body(surveyFormService.getSurveyForm(id));
   }
 
   @PostMapping("/ins")
-  public ResponseEntity<?> insSurvey(@RequestBody FormRequest formRequest) {
+  public ResponseEntity<?> insSurvey(@RequestBody FormReq formRequest) {
     surveyFormService.saveSurvey(formRequest);
     return ResponseEntity.ok().build();
   }

@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class QuestionRequest {
+public class QuestionReq {
   
   private Long id;
 
@@ -29,7 +29,7 @@ public class QuestionRequest {
 
   private Integer questionOrder;
 
-  private List<OptionItemRequest> options;
+  private List<OptionItemReq> options;
 
   public Question toEntity() {
     Question question =  Question.builder()                                 
@@ -37,12 +37,6 @@ public class QuestionRequest {
                                  .isRequired(isRequired)
                                  .questionOrder(questionOrder)
                                  .build();
-
-    question.addOptions(
-      options != null ? options.stream()
-                               .map(OptionItemRequest::toEntity)
-                               .collect(Collectors.toList())
-                      : List.of());
 
     return question;
 

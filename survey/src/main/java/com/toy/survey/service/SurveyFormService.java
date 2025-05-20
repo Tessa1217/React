@@ -1,9 +1,17 @@
 package com.toy.survey.service;
 
-import com.toy.survey.dto.surveyForm.FormRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.toy.survey.dto.surveyForm.FormReq;
+import com.toy.survey.dto.surveyForm.FormRes;
 
 public interface SurveyFormService {
 
-  void saveSurvey(FormRequest formRequest);
+  Page<FormRes> getSurveyFormList(Pageable pageable);
+
+  FormRes getSurveyForm(Long id);
+
+  void saveSurvey(FormReq formRequest);
   
 }

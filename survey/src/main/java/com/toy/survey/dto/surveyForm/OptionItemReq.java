@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OptionItemRequest {
+public class OptionItemReq {
 
   private Long id;
   
