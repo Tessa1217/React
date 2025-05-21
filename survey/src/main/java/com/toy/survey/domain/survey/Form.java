@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.toy.survey.domain.common.CommonSystemField;
 import com.toy.survey.domain.user.User;
+import com.toy.survey.dto.surveyForm.FormReq;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -74,6 +75,14 @@ public class Form extends CommonSystemField {
 
   public void setUser(User user) {
     this.user = user;
+  }
+
+  public void update(FormReq req) {
+    this.title = req.getTitle();
+    this.expiresAt = req.getExpiresAt();
+    this.description = req.getDescription();
+    this.isPublic = req.getIsPublic();
+    this.requiresLogin = req.getRequiresLogin();    
   }
   
 }

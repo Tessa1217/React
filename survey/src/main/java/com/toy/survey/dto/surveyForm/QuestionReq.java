@@ -32,7 +32,8 @@ public class QuestionReq {
   private List<OptionItemReq> options;
 
   public Question toEntity() {
-    Question question =  Question.builder()                                 
+    Question question =  Question.builder()           
+                                 .id(id)                      
                                  .questionText(questionText)                                 
                                  .isRequired(isRequired)
                                  .questionOrder(questionOrder)

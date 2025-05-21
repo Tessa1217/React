@@ -1,11 +1,15 @@
 package com.toy.survey.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.toy.survey.domain.code.Code;
 import com.toy.survey.domain.survey.Form;
@@ -15,6 +19,7 @@ import com.toy.survey.domain.user.User;
 import com.toy.survey.dto.surveyForm.FormReq;
 import com.toy.survey.dto.surveyForm.FormRes;
 import com.toy.survey.dto.surveyForm.OptionItemReq;
+import com.toy.survey.dto.surveyForm.QuestionReq;
 import com.toy.survey.repository.code.CodeRepository;
 import com.toy.survey.repository.survey.SurveyFormQueryDSLRepository;
 import com.toy.survey.repository.survey.SurveyFormRepository;
@@ -42,8 +47,8 @@ public class SurveyFormServiceImpl implements SurveyFormService {
 
   @Override
   public FormRes getSurveyForm(Long id) {
-    Form form = surveyFormRepository.findById(id).orElseThrow(() -> new RuntimeException("설문이 없습니다."));
-    return FormRes.fromEntity(form);    
+    return surveyFormQueryDSLRepository
+                       .findByIdWithQuestions(id);
   }  
 
   @Override
@@ -57,19 +62,10 @@ public class SurveyFormServiceImpl implements SurveyFormService {
     List<Question> questionList = formRequest.getQuestionList()
                                              .stream()
                                              .map(q -> {
-                                              Question question = q.toEntity();
-                                              Code code = codeRepository.findByCode(q.getType().getCode())
-                                                                        .orElseThrow(() -> new RuntimeException("해당하는 문제 유형 코드가 없습니다."));                                                                        
-                                              question.setQuestionTypeCode(code);
-                                              if (q.getOptions() != null) {
-                                                List<OptionItem> options = q.getOptions()
-                                                                            .stream()
-                                                                            .map(OptionItemReq::toEntity)
-                                                                            .collect(Collectors.toList());
-                                                                            question.addOptions(options);                                                                              
-                                              }
-                                              return question;
-                                             })
+                                                Question question = generateNewQuestion(q);
+                                                question.addOptions(convertQuestionOptionItems(q));
+                                                return question;
+                                              })
                                              .collect(Collectors.toList());
 
 
@@ -78,6 +74,78 @@ public class SurveyFormServiceImpl implements SurveyFormService {
                            : List.of());                
     
     surveyFormRepository.save(form);
+
+  }
+
+  private Question generateNewQuestion(QuestionReq questionReq) {
+    Question question = questionReq.toEntity();
+    Code code = codeRepository.findByCode(questionReq.getType().getCode())
+                              .orElseThrow(() -> new RuntimeException("해당하는 문제 유형 코드가 없습니다."));                                                                        
+    question.setQuestionTypeCode(code);    
+    return question;
+  }
+
+  private List<OptionItem> convertQuestionOptionItems(QuestionReq question) {
+    List<OptionItemReq> options = Optional.ofNullable(question.getOptions()).orElse(List.of());
+
+    return options.stream()
+                  .map(OptionItemReq::toEntity)
+                  .collect(Collectors.toList());
+  }
+
+  @Override
+  @Transactional
+  public void updateSurvey(FormReq formRequest) {
+
+    Form form = surveyFormRepository.findById(formRequest.getId()).orElseThrow(() -> new IllegalArgumentException("해당 설문지가 존재하지 않습니다."));
+
+    form.update(formRequest);
+
+    Map<Long, Question> existingQuestionMap = form.getQuestionList().stream()
+        .collect(Collectors.toMap(Question::getId, q -> q));    
+
+    for (QuestionReq req : formRequest.getQuestionList()) {
+      if (req.getId() != null && existingQuestionMap.containsKey(req.getId())) {
+        Question existing = existingQuestionMap.get(req.getId());
+        existing.update(req);
+        updateOptions(existing, req.getOptions());
+      } else {      
+        form.addQuestion(generateNewQuestion(req));        
+      }
+    }
+
+    if (formRequest.getDelQuestions() != null && !formRequest.getDelQuestions().isEmpty()) {
+
+      List<Question> delQuestion = existingQuestionMap
+                                             .entrySet()
+                                             .stream()
+                                             .filter((m) -> formRequest.getDelQuestions().contains(m.getKey()))
+                                             .map(Map.Entry::getValue)
+                                             .collect(Collectors.toList());
+
+      form.getQuestionList().removeAll(delQuestion);
+    }    
+
+  }
+
+  private void updateOptions(Question question, List<OptionItemReq> optionList) {
+    Map<Long, OptionItem> existingMap = question.getOptionList().stream()
+        .collect(Collectors.toMap(OptionItem::getId, o -> o));    
+
+    for (OptionItemReq optionReq : optionList) {
+      if (optionReq.getId() != null && existingMap.containsKey(optionReq.getId())) {
+        OptionItem existing = existingMap.get(optionReq.getId());
+        existing.update(optionReq);        
+        existingMap.remove(optionReq.getId());
+      } else {
+        OptionItem newOption = optionReq.toEntity();
+        question.addOption(newOption);
+      }
+    }
+
+    for (OptionItem toRemove : existingMap.values()) {
+      question.getOptionList().remove(toRemove); // orphanRemoval = true
+    }    
 
   }
 

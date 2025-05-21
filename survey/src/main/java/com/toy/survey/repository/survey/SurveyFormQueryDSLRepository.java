@@ -3,10 +3,8 @@ package com.toy.survey.repository.survey;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.toy.survey.domain.survey.Form;
@@ -14,7 +12,9 @@ import com.toy.survey.domain.survey.OptionItem;
 import com.toy.survey.domain.survey.QForm;
 import com.toy.survey.domain.survey.QOptionItem;
 import com.toy.survey.domain.survey.QQuestion;
-import com.toy.survey.domain.survey.Question;
+import com.toy.survey.dto.surveyForm.FormRes;
+import com.toy.survey.dto.surveyForm.OptionItemRes;
+import com.toy.survey.dto.surveyForm.QuestionRes;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,45 +23,50 @@ import lombok.RequiredArgsConstructor;
 public class SurveyFormQueryDSLRepository {
 
   private final JPAQueryFactory queryFactory;
-
-  public Page<Form> findAllWithQuestionsAndOptions(Pageable pageable) {
+  
+  @Transactional(readOnly = true)
+  public FormRes findByIdWithQuestions(Long id) {
         
     QForm form = QForm.form;
     QQuestion question = QQuestion.question;
     QOptionItem optionItem = QOptionItem.optionItem;
 
-    // 기본 Form 조회
-    List<Form> forms = queryFactory.select(form)
-    .from(form)
-    .leftJoin(form.questionList, question).fetchJoin()  // questionList를 eager fetch
-    .offset(pageable.getOffset())
-    .limit(pageable.getPageSize())
-    .fetch();
+    Form formWithQuestions = queryFactory.selectFrom(form)
+                                         .leftJoin(form.questionList, question).fetchJoin()                                         
+                                         .where(form.id.eq(id))
+                                         .fetchOne();  
+    
+    // MultipleBagFetchException으로 인해서 분리해서 조회                                         
+    if (formWithQuestions != null && !formWithQuestions.getQuestionList().isEmpty()) {
+     List<OptionItem> options = queryFactory.selectFrom(optionItem)
+                  .leftJoin(optionItem.question, question).fetchJoin()
+                  .where(optionItem.question.in(formWithQuestions.getQuestionList()))
+                  .fetch();  // OptionItem을 별도 쿼리로 한번에 로딩
 
-    // Question 목록 추출
-    List<Question> questions = forms.stream()
-        .flatMap(f -> f.getQuestionList().stream())
-        .collect(Collectors.toList());
+      formWithQuestions.getQuestionList().forEach(questionEntity -> {
+          var optionsForQuestion = options.stream()
+                                              .filter(option -> option.getQuestion().equals(questionEntity))
+                                              .collect(Collectors.toList());
+          questionEntity.addOptions(optionsForQuestion);
+      });                        
+    }
 
-    // OptionItem 목록을 별도 조회
-    List<OptionItem> optionItems = queryFactory.selectFrom(optionItem)
-        .where(optionItem.question.in(questions))
-        .fetch();
+    FormRes formRes = FormRes.fromEntity(formWithQuestions);
 
-    // OptionItem을 각 Question에 수동으로 설정
-    questions.forEach(q -> {
-      List<OptionItem> options = optionItems.stream()
-              .filter(option -> option.getQuestion().getId().equals(q.getId()))
-              .collect(Collectors.toList());
-      q.addOptions(options);
-    });          
+    formRes.addQuestionRes(
+      formWithQuestions.getQuestionList().stream().map(q -> {
+        QuestionRes qr = QuestionRes.fromEntity(q);
+        if (q.getOptionList() != null && !q.getOptionList().isEmpty()) {
+          qr.addOptions(
+            q.getOptionList().stream().map(o -> OptionItemRes.fromEntity(o)).collect(Collectors.toList())
+          );          
+        }
+        return qr;
+      }).collect(Collectors.toList())
+    );
+    
+    return formRes;
 
-    // 전체 count 쿼리
-    long total = queryFactory.select(form.count())
-            .from(form)
-            .fetchOne();
-
-    return new PageImpl<>(forms, pageable, total);    
   }
   
 }

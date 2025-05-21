@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.toy.survey.domain.code.Code;
 import com.toy.survey.domain.common.CommonSystemField;
+import com.toy.survey.dto.surveyForm.QuestionReq;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -77,6 +78,12 @@ public class Question extends CommonSystemField {
   public void addOption(OptionItem optionItem) {
     optionItem.assignQuestion(this);
     optionList.add(optionItem);    
+  }
+
+  public void update(QuestionReq req) {
+    this.questionText = req.getQuestionText();
+    this.isRequired = req.getIsRequired();
+    this.questionOrder = req.getQuestionOrder();
   }
 
 }

@@ -1,6 +1,7 @@
 package com.toy.survey.domain.survey;
 
 import com.toy.survey.domain.common.CommonSystemField;
+import com.toy.survey.dto.surveyForm.OptionItemReq;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,6 +41,11 @@ public class OptionItem extends CommonSystemField {
 
   public void assignQuestion(Question question) {
     this.question = question;
+  }
+
+  public void update(OptionItemReq req) {
+    this.optionText = req.getOptionText();
+    this.optionOrder = req.getOptionOrder();    
   }
 
 }

@@ -2,7 +2,6 @@ package com.toy.survey.dto.surveyForm;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.toy.survey.domain.survey.Form;
 
@@ -17,6 +16,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FormReq {
+
+  private Long id;
   
   private String title;
 
@@ -30,11 +31,15 @@ public class FormReq {
 
   private List<QuestionReq> questionList;
 
+  private List<Long> delQuestions;
+
   public Form toEntity() {
 
     Form form = Form.builder()
+                    .id(id)
                     .title(title)
                     .description(description)
+                    .isPublic(isPublic)
                     .requiresLogin(requiresLogin)
                     .expiresAt(expiresAt)
                     .build();          

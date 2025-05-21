@@ -43,7 +43,8 @@ public class SurveyFormController {
   }
 
   @PostMapping("/upd")
-  public ResponseEntity<?> updSurvey() {
+  public ResponseEntity<?> updSurvey(@RequestBody FormReq formRequest) {
+    surveyFormService.updateSurvey(formRequest);
     return ResponseEntity.ok().build();
   }
     

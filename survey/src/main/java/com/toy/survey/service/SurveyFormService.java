@@ -13,5 +13,7 @@ public interface SurveyFormService {
   FormRes getSurveyForm(Long id);
 
   void saveSurvey(FormReq formRequest);
+
+  void updateSurvey(FormReq formRequest);
   
 }

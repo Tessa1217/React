@@ -19,7 +19,7 @@ public class QuestionRes {
 
   private String questionText;
 
-  private QuestionType type;
+  private String type;
 
   private Boolean isRequired;
 
@@ -27,23 +27,20 @@ public class QuestionRes {
 
   private List<OptionItemRes> options;
 
-  public static QuestionRes fromEntity(Question question) {
-
-    List<OptionItemRes> optionItemRes = question.getOptionList()
-                                                .stream()
-                                                .map(option -> OptionItemRes.fromEntity(option))
-                                                .collect(Collectors.toList());
-                                               
+  public static QuestionRes fromEntity(Question question) {                                               
     QuestionRes questionRes = QuestionRes.builder()
                                       .id(question.getId())
                                       .isRequired(question.getIsRequired())
-                                      .questionOrder(question.getQuestionOrder())
-                                      .options(optionItemRes)
+                                      .questionOrder(question.getQuestionOrder())          
+                                      .type(question.getQuestionType().getCode())                            
+                                      .questionText(question.getQuestionText())
                                       .build();
-
-
     return questionRes;
 
   }  
+
+  public void addOptions(List<OptionItemRes> options) {
+    this.options = options;
+  }
   
 }

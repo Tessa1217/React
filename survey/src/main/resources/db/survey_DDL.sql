@@ -56,7 +56,7 @@ VALUES (1, 'PARAGRAPH', '장문 서술형', '장문 서술형 유형', 3, NOW(),
 INSERT INTO CODE (CODE_GROUP_ID, CODE, NAME, DESCRIPTION, CODE_ORDER, CREATED_AT, CReATED_BY, UPDATED_AT, UPDATED_BY)
 VALUES (1, 'CHECKBOX', '다중 선택', '다중 선택을 체크박스로 선택 가능한 유형', 4, NOW(), 'ADMIN', NOW(), 'ADMIN');
 INSERT INTO CODE (CODE_GROUP_ID, CODE, NAME, DESCRIPTION, CODE_ORDER, CREATED_AT, CReATED_BY, UPDATED_AT, UPDATED_BY)
-VALUES (1, 'DROPBOW', '드롭박스', '드롭박스 (select) 유형', 5, NOW(), 'ADMIN', NOW(), 'ADMIN');
+VALUES (1, 'DROPDOWN', '드롭박스', '드롭박스 (select) 유형', 5, NOW(), 'ADMIN', NOW(), 'ADMIN');
 
 -- 공통 옵션 세트 정의 (예: 5점 척도, 예/아니오 등)
 CREATE TABLE option_set (

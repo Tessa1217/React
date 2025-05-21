@@ -2,11 +2,8 @@ package com.toy.survey.dto.surveyForm;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import com.toy.survey.domain.survey.Form;
-import com.toy.survey.domain.user.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,8 +39,12 @@ public class FormRes {
                   .isPublic(form.getIsPublic())
                   .requiresLogin(form.getRequiresLogin())
                   .expiresAt(form.getExpiresAt())
-                  // .userId(Optional.ofNullable(form.getUser()).map(User::getId));
+                  .userId(form.getUser() != null ? form.getUser().getId() : null)                  
                   .build();                                           
+  }
+
+  public void addQuestionRes(List<QuestionRes> questions) {
+    this.questions = questions;
   }
   
 }
