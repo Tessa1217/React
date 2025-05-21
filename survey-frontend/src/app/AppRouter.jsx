@@ -16,8 +16,8 @@ const AppRouter = () => {
       <Route path='/forms' element={<FormListPage />} />
       <Route path='/forms/new' element={<FormEditorPage />} />
       <Route path='/forms/:id' element={<FormDetailPage />} />
-      {/* <Route path='/forms/:id/edit' element={<FormEditorPage />} />
-    <Route path='/responses' element={<ResponseListPage />} />
+      <Route path='/forms/:id/edit' element={<FormEditorPage />} />
+      {/*  <Route path='/responses' element={<ResponseListPage />} />
     <Route path='/responses/:formId' element={<ResponseSubmitPage />} /> */}
     </Routes>
   );

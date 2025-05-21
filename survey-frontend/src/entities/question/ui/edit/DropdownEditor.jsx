@@ -1,7 +1,7 @@
-import RemoveOptionButton from '@/entities/question/ui/RemoveOptionButton';
-import AddOptionButton from '@/entities/question/ui/AddOptionButton';
+import RemoveOptionButton from '@/entities/question/ui/edit/RemoveOptionButton';
+import AddOptionButton from '@/entities/question/ui/edit/AddOptionButton';
 
-const Dropdown = ({
+const DropdownEditor = ({
   id,
   options,
   handleOptionChange,
@@ -27,15 +27,8 @@ const Dropdown = ({
         ))}
         <AddOptionButton onAddOption={onAddOption} id={id} />
       </div>
-      <select className='mt-2 w-full px-3 py-2 border border-gray-300 rounded text-gray-500'>
-        {options.map((option) => (
-          <option key={option.id} value={option.optionOrder}>
-            {option.optionText}
-          </option>
-        ))}
-      </select>
     </div>
   );
 };
 
-export default Dropdown;
+export default DropdownEditor;

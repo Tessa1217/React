@@ -3,7 +3,7 @@ import { FormModeProvider } from '@/shared/contexts/FormModeContext';
 
 const FormEditorPage = () => {
   return (
-    <FormModeProvider>
+    <FormModeProvider initialMode='edit'>
       <FormEditorContainer />
     </FormModeProvider>
   );

@@ -1,9 +1,9 @@
 import { FaTimes } from 'react-icons/fa';
-import Checkbox from '@/entities/question/ui/Checkbox';
-import Dropdown from '@/entities/question/ui/Dropdown';
-import MultipleChoice from '@/entities/question/ui/MultipleChoice';
-import ShortAnswer from '@/entities/question/ui/ShortAnswer';
-import Paragraph from '@/entities/question/ui/Paragraph';
+import CheckboxEditor from '@/entities/question/ui/edit/CheckboxEditor';
+import DropdownEditor from '@/entities/question/ui/edit/DropdownEditor';
+import MultipleChoiceEditor from '@/entities/question/ui/edit/MultipleChoiceEditor';
+import ShortAnswerEditor from '@/entities/question/ui/edit/ShortAnswerEditor';
+import ParagraphEditor from '@/entities/question/ui/edit/ParagraphEditor';
 
 const QuestionCard = ({
   children,
@@ -64,11 +64,11 @@ const EditableQuestionCard = ({
 }) => {
   const questionType = () => {
     switch (type) {
-      case 'short_text':
+      case 'SHORT_ANSWER':
         return <ShortAnswer />;
-      case 'checkbox':
+      case 'CHECKBOX':
         return (
-          <Checkbox
+          <CheckboxEditor
             id={id}
             options={options}
             handleOptionChange={handleOptionChange}
@@ -76,9 +76,9 @@ const EditableQuestionCard = ({
             onRemoveOption={onRemoveOption}
           />
         );
-      case 'multiple_choice':
+      case 'MULTIPLE_CHOICE':
         return (
-          <MultipleChoice
+          <MultipleChoiceEditor
             id={id}
             options={options}
             handleOptionChange={handleOptionChange}
@@ -86,19 +86,19 @@ const EditableQuestionCard = ({
             onRemoveOption={onRemoveOption}
           />
         );
-      case 'dropdown':
+      case 'DROPDOWN':
         return (
-          <Dropdown
+          <DropdownEditor
             options={options}
             handleOptionChange={handleOptionChange}
             onAddOption={onAddOption}
             onRemoveOption={onRemoveOption}
           />
         );
-      case 'paragraph':
-        return <Paragraph />;
+      case 'PARAGRAPH':
+        return <ParagraphEditor />;
       default:
-        return <ShortAnswer />;
+        return <ShortAnswerEditor />;
     }
   };
   return (

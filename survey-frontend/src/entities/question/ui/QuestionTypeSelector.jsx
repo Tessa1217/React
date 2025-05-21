@@ -1,11 +1,11 @@
 import { FaCirclePlus } from 'react-icons/fa6';
 const QuestionTypeSelector = ({ type, onChange, onAddQuestion }) => {
   const options = [
-    { id: 1, name: '단답형', value: 'short_answer' },
-    { id: 2, name: '장문형', value: 'paragraph' },
-    { id: 3, name: '객관식', value: 'multiple_choice' },
-    { id: 4, name: '체크박스', value: 'checkbox' },
-    { id: 5, name: '드롭다운', value: 'dropdown' },
+    { id: 1, name: '단답형', value: 'SHORT_ANSWER' },
+    { id: 2, name: '장문형', value: 'PARAGRAPH' },
+    { id: 3, name: '객관식', value: 'MULTIPLE_CHOICE' },
+    { id: 4, name: '체크박스', value: 'CHECKBOX' },
+    { id: 5, name: '드롭다운', value: 'DROPDOWN' },
   ];
 
   return (

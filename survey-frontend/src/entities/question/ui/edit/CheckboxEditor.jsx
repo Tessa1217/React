@@ -1,7 +1,7 @@
-import RemoveOptionButton from '@/entities/question/ui/RemoveOptionButton';
-import AddOptionButton from '@/entities/question/ui/AddOptionButton';
+import RemoveOptionButton from '@/entities/question/ui/edit/RemoveOptionButton';
+import AddOptionButton from '@/entities/question/ui/edit/AddOptionButton';
 
-const MultipleChoice = ({
+const CheckboxEditor = ({
   id,
   options,
   handleOptionChange,
@@ -12,7 +12,7 @@ const MultipleChoice = ({
     <div className='space-y-2'>
       {options.map((option) => (
         <label key={option.id} className='flex items-center space-x-2'>
-          <input type='radio' disabled />
+          <input type='checkbox' disabled />
           <input
             type='text'
             value={option.optionText}
@@ -27,4 +27,4 @@ const MultipleChoice = ({
   );
 };
 
-export default MultipleChoice;
+export default CheckboxEditor;

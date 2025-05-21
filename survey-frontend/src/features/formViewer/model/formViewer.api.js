@@ -1,9 +1,8 @@
 import client from '@/shared/api/client';
 
-export const getSurveyFormList = () => {
-  return client.get('/survey/form/list');
-};
-
-export const getSurveyForm = (id) => {
-  return client.get(`/survey/form/${id}`);
+export const getSurveyFormList = (requestParam) => {
+  return client.get(
+    '/survey/form/list',
+    requestParam && { params: { page: requestParam.page } }
+  );
 };

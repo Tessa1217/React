@@ -1,6 +1,11 @@
-import { useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { changeValue } from '@/entities/form/model/form.slice';
+import { useNavigate, useParams } from 'react-router-dom';
+import {
+  changeValue,
+  resetForm,
+  setForm,
+} from '@/entities/form/model/form.slice';
 import {
   addQuestion,
   removeQuestion,
@@ -9,43 +14,82 @@ import {
   addOption,
   removeOption,
   changeOption,
+  resetQuestions,
+  setQuestions,
 } from '@/entities/question/model/question.slice';
 import {
   selectCurrentForm,
   selectQuestions,
 } from '@/features/formEditor/model/formEditor.selectors';
 import { saveFormRequest } from '@/features/formEditor/model/formEditor.slice';
+import { fetchFormById } from '@/entities/form/model/form.api';
 import { HiCheckCircle } from 'react-icons/hi';
 import FormMetaEditor from '@/entities/form/ui/FormMetaEditor';
-import EditableQuestionCard from '@/entities/question/ui/EditableQuestionCard';
+import QuestionCardRenderer from '@/entities/question/ui/QuestionCardRenderer';
 import QuestionTypeSelector from '@/entities/question/ui/QuestionTypeSelector';
+import { FaTimesCircle } from 'react-icons/fa';
 
 const FormEditorContainer = () => {
+  const navigate = useNavigate();
+  const { id: formId } = useParams();
+
   const form = useSelector(selectCurrentForm);
   const questions = useSelector(selectQuestions);
-  const [type, setType] = useState('multiple_choice');
+
+  const [type, setType] = useState('MULTIPLE_CHOICE');
 
   const dispatch = useDispatch();
 
-  const handleChange = (id, value) => {
-    dispatch(changeValue({ id, value }));
-  };
+  useEffect(() => {
+    async function fetchForm() {
+      const { data } = await fetchFormById(formId);
+      const { questions, ...formData } = data;
+      console.log(formData);
+      dispatch(setForm(formData));
+      dispatch(setQuestions(questions));
+    }
+    if (formId) {
+      fetchForm();
+    }
+  }, [formId, dispatch]);
 
-  const handleTypeChange = (type) => {
+  const handleChange = useCallback(
+    (id, value) => {
+      dispatch(changeValue({ id, value }));
+    },
+    [dispatch]
+  );
+
+  const handleTypeChange = useCallback((type) => {
     setType(type);
-  };
+  }, []);
 
-  const handleAddQuestion = () => {
+  const handleAddQuestion = useCallback(() => {
     dispatch(addQuestion(type));
-  };
+  }, [dispatch, type]);
 
-  const handleSaveForm = () => {
+  const resetSurveyForm = useCallback(() => {
+    dispatch(resetForm());
+    dispatch(resetQuestions());
+  }, [dispatch]);
+
+  const handleSaveAfter = useCallback(() => {
+    resetSurveyForm();
+    navigate('/forms');
+  }, [resetSurveyForm, navigate]);
+
+  const handleCancel = useCallback(() => {
+    resetSurveyForm();
+    navigate('/forms');
+  }, [resetSurveyForm, navigate]);
+
+  const handleSaveForm = useCallback(() => {
     const formData = {
       ...form,
       questionList: questions,
     };
-    dispatch(saveFormRequest(formData));
-  };
+    dispatch(saveFormRequest({ param: formData, callbackFn: handleSaveAfter }));
+  }, [dispatch, form, handleSaveAfter, questions]);
 
   return (
     <div className='max-w-4xl mx-auto p-6 space-y-6'>
@@ -57,7 +101,7 @@ const FormEditorContainer = () => {
       />
       {questions.length > 0 &&
         questions.map((question) => (
-          <EditableQuestionCard
+          <QuestionCardRenderer
             key={question.id}
             {...question}
             onRemoveQuestion={() => dispatch(removeQuestion(question.id))}
@@ -76,16 +120,26 @@ const FormEditorContainer = () => {
             }
           />
         ))}
-      <div className='flex space-y-6 w-full max-w-3xl mx-auto justify-end-safe'>
-        <button
-          className='flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg transition cursor-pointer'
-          onClick={() => handleSaveForm()}
-        >
-          저장 <HiCheckCircle />
-        </button>
+      <div className='flex space-y-6 w-full max-w-3xl mx-auto justify-end-safe gap-2'>
+        <div>
+          <button
+            className='flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg transition cursor-pointer'
+            onClick={() => handleSaveForm()}
+          >
+            저장 <HiCheckCircle size={20} />
+          </button>
+        </div>
+        <div>
+          <button
+            className='flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg transition cursor-pointer'
+            onClick={() => handleCancel()}
+          >
+            취소 <FaTimesCircle size={20} />
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
-export default FormEditorContainer;
+export default React.memo(FormEditorContainer);

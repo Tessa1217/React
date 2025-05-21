@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
  * @param {Function} apiFn - 호출할 API 함수
  * @param {Function} successAction - 성공 시 dispatch할 액션
  * @param {Function} failureAction - 실패 시 dispatch할 액션
+ * @param {Function} callbackFn - 콜백 함수
  * @param {string} successMessage - 성공 토스트 메시지 (선택)
  */
 export function createRequestSaga(
@@ -16,10 +17,16 @@ export function createRequestSaga(
 ) {
   return function* (action) {
     try {
-      const response = yield call(apiFn, action.payload);
+      const { payload = { param: '' } } = action;
+      const { param, callbackFn } = payload;
+
+      const response = yield call(apiFn, param);
       yield put(successAction(response));
       if (successMessage) {
         toast.success(successMessage);
+      }
+      if (callbackFn && callbackFn instanceof Function) {
+        yield call(callbackFn, response.data);
       }
     } catch (error) {
       const message =

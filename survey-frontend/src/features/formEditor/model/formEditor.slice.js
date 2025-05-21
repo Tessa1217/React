@@ -8,7 +8,7 @@ const formEditorSlice = createSlice({
   name: 'formEditor',
   initialState,
   reducers: {
-    saveFormRequest: (state) => {
+    saveFormRequest: (state, action) => {
       state.isSaving = true;
     },
     saveFormSuccess: (state) => {

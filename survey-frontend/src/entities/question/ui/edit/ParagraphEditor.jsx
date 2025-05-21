@@ -1,4 +1,4 @@
-const Paragraph = () => {
+const ParagraphEditor = () => {
   return (
     <textarea
       disabled
@@ -9,4 +9,4 @@ const Paragraph = () => {
   );
 };
 
-export default Paragraph;
+export default ParagraphEditor;

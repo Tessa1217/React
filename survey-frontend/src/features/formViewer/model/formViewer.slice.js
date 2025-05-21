@@ -9,7 +9,7 @@ const formViewerSlice = createSlice({
   name: 'formViewer',
   initialState,
   reducers: {
-    fetchFormListRequest: (state, { payload }) => {
+    fetchFormListRequest: (state, action) => {
       state.isLoading = true;
     },
     fetchFormListSuccess: (state, { payload }) => {
@@ -21,6 +21,17 @@ const formViewerSlice = createSlice({
     fetchFormListFailure: (state) => {
       state.isLoading = false;
     },
+    fetchFormRequest: (state, { payload }) => {
+      state.isLoading = true;
+    },
+    fetchFormSuccess: (state, { payload }) => {
+      state.isLoading = false;
+      const { data } = payload;
+      state.form = data;
+    },
+    fetchFormFailure: (state) => {
+      state.isLoading = false;
+    },
   },
 });
 
@@ -28,6 +39,9 @@ export const {
   fetchFormListRequest,
   fetchFormListSuccess,
   fetchFormListFailure,
+  fetchFormRequest,
+  fetchFormSuccess,
+  fetchFormFailure,
 } = formViewerSlice.actions;
 export default formViewerSlice.reducer;
 

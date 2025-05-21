@@ -4,8 +4,8 @@ const FormModeContext = createContext();
 
 export const useMode = () => useContext(FormModeContext);
 
-export const FormModeProvider = ({ children }) => {
-  const [mode, setMode] = useState('edit');
+export const FormModeProvider = ({ children, initialMode = 'edit' }) => {
+  const [mode, setMode] = useState(initialMode);
   const toggleMode = () => {
     setMode((prevMode) => (prevMode === 'edit' ? 'preview' : 'edit'));
   };

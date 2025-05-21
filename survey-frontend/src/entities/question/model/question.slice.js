@@ -77,6 +77,11 @@ const questionSlice = createSlice({
         option.optionText = optionText;
       }
     },
+    resetQuestions: () => initialState,
+    setQuestions: (state, { payload: questions }) => {
+      state.questions = questions;
+      state.questionIdx = questions.length + 1;
+    },
   },
 });
 
@@ -88,5 +93,7 @@ export const {
   addOption,
   removeOption,
   changeOption,
+  resetQuestions,
+  setQuestions,
 } = questionSlice.actions;
 export default questionSlice.reducer;

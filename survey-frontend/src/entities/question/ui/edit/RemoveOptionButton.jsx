@@ -1,3 +1,4 @@
+import { FaTimes } from 'react-icons/fa';
 const RemoveOptionButton = ({ onRemoveOption, id }) => {
   return (
     <button
