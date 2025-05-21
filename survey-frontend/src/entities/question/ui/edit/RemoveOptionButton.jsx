@@ -1,3 +1,4 @@
+import React from 'react';
 import { FaTimes } from 'react-icons/fa';
 const RemoveOptionButton = ({ onRemoveOption, id }) => {
   return (
@@ -11,4 +12,4 @@ const RemoveOptionButton = ({ onRemoveOption, id }) => {
   );
 };
 
-export default RemoveOptionButton;
+export default React.memo(RemoveOptionButton);

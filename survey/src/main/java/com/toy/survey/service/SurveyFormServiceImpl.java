@@ -1,6 +1,5 @@
 package com.toy.survey.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -52,6 +51,7 @@ public class SurveyFormServiceImpl implements SurveyFormService {
   }  
 
   @Override
+  @Transactional
   public void saveSurvey(FormReq formRequest) {
 
     User user = userRepository.findByEmail("yj.kwon@fusionsoft.co.kr");
@@ -109,26 +109,24 @@ public class SurveyFormServiceImpl implements SurveyFormService {
         Question existing = existingQuestionMap.get(req.getId());
         existing.update(req);
         updateOptions(existing, req.getOptions());
+        existingQuestionMap.remove(existing.getId());
       } else {      
-        form.addQuestion(generateNewQuestion(req));        
+        Question question = generateNewQuestion(req);
+        question.addOptions(convertQuestionOptionItems(req));            
+        form.addQuestion(question);                                                    
       }
     }
 
-    if (formRequest.getDelQuestions() != null && !formRequest.getDelQuestions().isEmpty()) {
-
-      List<Question> delQuestion = existingQuestionMap
-                                             .entrySet()
-                                             .stream()
-                                             .filter((m) -> formRequest.getDelQuestions().contains(m.getKey()))
-                                             .map(Map.Entry::getValue)
-                                             .collect(Collectors.toList());
-
-      form.getQuestionList().removeAll(delQuestion);
-    }    
+    form.getQuestionList().removeAll(existingQuestionMap.values());
 
   }
 
   private void updateOptions(Question question, List<OptionItemReq> optionList) {
+    
+    if (optionList == null) {
+      return;  
+    }
+
     Map<Long, OptionItem> existingMap = question.getOptionList().stream()
         .collect(Collectors.toMap(OptionItem::getId, o -> o));    
 
@@ -143,9 +141,7 @@ public class SurveyFormServiceImpl implements SurveyFormService {
       }
     }
 
-    for (OptionItem toRemove : existingMap.values()) {
-      question.getOptionList().remove(toRemove); // orphanRemoval = true
-    }    
+    question.getOptionList().removeAll(existingMap.values());
 
   }
 

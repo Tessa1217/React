@@ -1,3 +1,4 @@
+import React from 'react';
 import RemoveOptionButton from '@/entities/question/ui/edit/RemoveOptionButton';
 import AddOptionButton from '@/entities/question/ui/edit/AddOptionButton';
 
@@ -27,4 +28,4 @@ const CheckboxEditor = ({
   );
 };
 
-export default CheckboxEditor;
+export default React.memo(CheckboxEditor);

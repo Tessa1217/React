@@ -1,3 +1,4 @@
+import React from 'react';
 import RemoveOptionButton from '@/entities/question/ui/edit/RemoveOptionButton';
 import AddOptionButton from '@/entities/question/ui/edit/AddOptionButton';
 
@@ -31,4 +32,4 @@ const DropdownEditor = ({
   );
 };
 
-export default DropdownEditor;
+export default React.memo(DropdownEditor);

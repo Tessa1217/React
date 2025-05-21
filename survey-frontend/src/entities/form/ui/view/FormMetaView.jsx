@@ -18,6 +18,11 @@ const FormMetaView = ({
         >
           {isPublic ? '공개' : '비공개'}
         </span>
+        <span
+          className={`inline-flex items-center rounded-md bg-${badgeColor}-50 px-2 py-1 text-xs font-medium text-${badgeColor}-700 ring-1 ring-${badgeColor}-600/10 ring-inset`}
+        >
+          {requiresLogin ? '로그인 사용자' : '전체'}
+        </span>
       </h1>
       {/* 설문지 제목 */}
       <div className='text-xl font-medium text-gray-700'>{title}</div>

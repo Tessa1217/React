@@ -1,3 +1,4 @@
+import React from 'react';
 const DropdownViewer = ({ id, mode, options = [], value, handleChange }) => {
   return (
     <div className='space-y-2'>
@@ -18,4 +19,4 @@ const DropdownViewer = ({ id, mode, options = [], value, handleChange }) => {
   );
 };
 
-export default DropdownViewer;
+export default React.memo(DropdownViewer);

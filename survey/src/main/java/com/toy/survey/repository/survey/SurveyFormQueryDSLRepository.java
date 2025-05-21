@@ -23,13 +23,15 @@ import lombok.RequiredArgsConstructor;
 public class SurveyFormQueryDSLRepository {
 
   private final JPAQueryFactory queryFactory;
+
+  private QForm form = QForm.form;
+
+  private QQuestion question = QQuestion.question;
+
+  private QOptionItem optionItem = QOptionItem.optionItem;
   
   @Transactional(readOnly = true)
   public FormRes findByIdWithQuestions(Long id) {
-        
-    QForm form = QForm.form;
-    QQuestion question = QQuestion.question;
-    QOptionItem optionItem = QOptionItem.optionItem;
 
     Form formWithQuestions = queryFactory.selectFrom(form)
                                          .leftJoin(form.questionList, question).fetchJoin()                                         

@@ -1,4 +1,9 @@
-const FormTable = ({ formList, onViewButtonClick, onUpdateButtonClick }) => {
+const FormTable = ({
+  formList,
+  onViewButtonClick,
+  onUpdateButtonClick,
+  onDeleteButtonClick,
+}) => {
   return (
     <div className='overflow-x-auto shadow-lg rounded-lg"'>
       <table className='min-w-full bg-white border border-gray-200 rounded-lg'>
@@ -45,7 +50,10 @@ const FormTable = ({ formList, onViewButtonClick, onUpdateButtonClick }) => {
                   >
                     수정
                   </button>
-                  <button className='px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition duration-200 cursor-pointer'>
+                  <button
+                    className='px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition duration-200 cursor-pointer'
+                    onClick={() => onDeleteButtonClick(form.id)}
+                  >
                     삭제
                   </button>
                 </td>

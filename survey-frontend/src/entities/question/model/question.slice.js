@@ -5,7 +5,7 @@ const initialState = {
   questions: [
     {
       id: 1,
-      type: 'multiple_choice',
+      type: 'MULTIPLE_CHOICE',
       questionText: '',
       required: false,
       options: [],
@@ -42,10 +42,10 @@ const questionSlice = createSlice({
       }
     },
     changeRequired: (state, { payload }) => {
-      const { id, required } = payload;
+      const { id, isRequired } = payload;
       const question = findQuestionById(state, id);
       if (question) {
-        question.required = required;
+        question.isRequired = isRequired;
       }
     },
     addOption: (state, { payload: id }) => {

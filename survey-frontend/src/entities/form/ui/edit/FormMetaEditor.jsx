@@ -10,7 +10,7 @@ const FormMetaEditor = ({
 }) => {
   return (
     <div className='p-6 bg-white rounded-2xl shadow-md space-y-6 w-full max-w-3xl mx-auto'>
-      <h1 className='flex'>
+      <h1 className='text-2xl font-semibold text-gray-800 flex items-center gap-2'>
         <TiDocumentText /> 설문지 등록
       </h1>
       {/* 설문지 제목 */}

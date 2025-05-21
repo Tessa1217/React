@@ -1,3 +1,4 @@
+import React from 'react';
 const AddOptionButton = ({ onAddOption, id }) => {
   return (
     <button
@@ -10,4 +11,4 @@ const AddOptionButton = ({ onAddOption, id }) => {
   );
 };
 
-export default AddOptionButton;
+export default React.memo(AddOptionButton);

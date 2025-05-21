@@ -1,3 +1,4 @@
+import React from 'react';
 const ShortAnswerViewer = ({ value, mode, handleChange }) => {
   return (
     <input
@@ -11,4 +12,4 @@ const ShortAnswerViewer = ({ value, mode, handleChange }) => {
   );
 };
 
-export default ShortAnswerViewer;
+export default React.memo(ShortAnswerViewer);

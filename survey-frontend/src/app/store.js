@@ -8,7 +8,7 @@ import { createLogger } from 'redux-logger';
 import pagingReducer from '@/shared/model/paging.slice';
 import formReducer from '@/entities/form/model/form.slice';
 import questionReducer from '@/entities/question/model/question.slice';
-import formViewerReducer from '@/features/formViewer/model/formViewer.slice';
+import formListReducer from '@/features/formList/model/formList.slice';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -36,7 +36,7 @@ const storeReducer = combineReducers({
   paging: pagingReducer,
   form: formReducer,
   question: questionReducer,
-  formViewer: formViewerReducer,
+  formList: formListReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, storeReducer);

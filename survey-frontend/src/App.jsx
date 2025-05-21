@@ -1,6 +1,6 @@
-import Footer from './layout/Footer';
-import Header from './layout/Header';
-import Main from './layout/Main';
+import Footer from '@/widgets/Footer';
+import Header from '@/widgets/Header';
+import Main from '@/widgets/Main';
 
 function App() {
   return (

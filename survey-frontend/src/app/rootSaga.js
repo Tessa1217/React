@@ -1,8 +1,8 @@
 import { all } from 'redux-saga/effects';
 
+import watchForm from '@/entities/form/model/form.saga';
 import watchFormEditor from '@/features/formEditor/model/formEditor.saga';
-import watchFormViewer from '@/features/formViewer/model/formViewer.saga';
-
+import watchFormList from '@/features/formList/model/formList.saga';
 export default function* rootSaga() {
-  yield all([watchFormEditor(), watchFormViewer()]);
+  yield all([watchForm(), watchFormEditor(), watchFormList()]);
 }

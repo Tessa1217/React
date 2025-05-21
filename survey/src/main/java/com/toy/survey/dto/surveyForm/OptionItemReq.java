@@ -21,8 +21,7 @@ public class OptionItemReq {
   private Integer optionOrder;
 
   public OptionItem toEntity() {
-    return OptionItem.builder()       
-                     .id(id)              
+    return OptionItem.builder()                               
                      .optionText(optionText)
                      .optionOrder(optionOrder)
                      .build();

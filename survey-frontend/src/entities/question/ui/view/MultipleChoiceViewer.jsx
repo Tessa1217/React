@@ -1,3 +1,4 @@
+import React from 'react';
 const MultipleChoiceViewer = ({ options, mode, value, handleChange }) => {
   return (
     <div className='space-y-2'>
@@ -17,4 +18,4 @@ const MultipleChoiceViewer = ({ options, mode, value, handleChange }) => {
   );
 };
 
-export default MultipleChoiceViewer;
+export default React.memo(MultipleChoiceViewer);

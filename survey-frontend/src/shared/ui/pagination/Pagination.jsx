@@ -6,7 +6,7 @@ const Pagination = ({ totalCount, currentPage, limit, onPageChange }) => {
 
   const handleClick = (page) => {
     if (page < 1 || page > totalPages) return;
-    onPageChange(page);
+    onPageChange(page - 1);
   };
 
   const renderPages = () => {

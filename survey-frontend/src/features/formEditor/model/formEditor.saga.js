@@ -4,8 +4,14 @@ import {
   saveFormRequest,
   saveFormSuccess,
   saveFormFailure,
+  updateFormRequest,
+  updateFormSuccess,
+  updateFormFailure,
 } from '@/features/formEditor/model/formEditor.slice';
-import { saveForm } from '@/features/formEditor/model/formEditor.api';
+import {
+  saveForm,
+  updateForm,
+} from '@/features/formEditor/model/formEditor.api';
 
 const saveFormSaga = createRequestSaga(
   saveForm,
@@ -14,6 +20,14 @@ const saveFormSaga = createRequestSaga(
   '폼이 성공적으로 저장되었습니다.'
 );
 
+const updateFormSaga = createRequestSaga(
+  updateForm,
+  updateFormSuccess,
+  updateFormFailure,
+  '폼이 성공적으로 저장되었습니다.'
+);
+
 export default function* watchFormEditor() {
   yield takeLatest(saveFormRequest.type, saveFormSaga);
+  yield takeLatest(updateFormRequest.type, updateFormSaga);
 }

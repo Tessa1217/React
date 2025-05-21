@@ -1,3 +1,4 @@
+import React from 'react';
 const ShortAnswer = () => {
   return (
     <input
@@ -9,4 +10,4 @@ const ShortAnswer = () => {
   );
 };
 
-export default ShortAnswer;
+export default React.memo(ShortAnswer);

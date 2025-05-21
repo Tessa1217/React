@@ -1,3 +1,4 @@
+import React from 'react';
 const CheckboxViewer = ({
   id,
   mode,
@@ -28,4 +29,4 @@ const CheckboxViewer = ({
   );
 };
 
-export default CheckboxViewer;
+export default React.memo(CheckboxViewer);

@@ -1,3 +1,4 @@
+import React from 'react';
 const ParagraphEditor = () => {
   return (
     <textarea
@@ -9,4 +10,4 @@ const ParagraphEditor = () => {
   );
 };
 
-export default ParagraphEditor;
+export default React.memo(ParagraphEditor);

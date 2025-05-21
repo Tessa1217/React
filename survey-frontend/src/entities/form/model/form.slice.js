@@ -21,8 +21,24 @@ const formSlice = createSlice({
       Object.assign(state, form);
     },
     resetForm: () => initialState,
+    fetchFormRequest: (state) => {
+      state.isLoading = true;
+    },
+    fetchFormSuccess: (state) => {
+      state.isLoading = false;
+    },
+    fetchFormFailure: (state) => {
+      state.isLoading = false;
+    },
   },
 });
 
-export const { changeValue, resetForm, setForm } = formSlice.actions;
+export const {
+  changeValue,
+  resetForm,
+  setForm,
+  fetchFormRequest,
+  fetchFormSuccess,
+  fetchFormFailure,
+} = formSlice.actions;
 export default formSlice.reducer;

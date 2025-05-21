@@ -1,32 +1,35 @@
-import { useMode } from '@/shared/contexts/FormModeContext';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchFormRequest } from '@/features/formViewer/model/formViewer.slice';
-import {
-  selectCurrentForm,
-  selectQuestions,
-} from '@/features/formViewer/model/formViewer.selectors';
-import FormMetaView from '@/entities/form/ui/FormMetaView';
+import { fetchFormRequest, resetForm } from '@/entities/form/model/form.slice';
+import { resetQuestions } from '@/entities/question/model/question.slice';
+import { selectForm } from '@/entities/form/model/form.selectors';
+import { selectQuestions } from '@/entities/question/model/question.selectors';
+import FormMetaRenderer from '@/entities/form/ui/FormMetaRenderer';
 import QuestionCardRenderer from '@/entities/question/ui/QuestionCardRenderer';
 const FormViewContainer = () => {
   const navigate = useNavigate();
 
-  const { mode } = useMode();
   const dispatch = useDispatch();
 
   const { id: formId } = useParams();
 
-  const form = useSelector(selectCurrentForm);
+  const form = useSelector(selectForm);
   const questions = useSelector(selectQuestions);
 
   useEffect(() => {
-    dispatch(fetchFormRequest({ param: formId }));
+    dispatch(fetchFormRequest({ formId }));
   }, [dispatch, formId]);
+
+  const handleCancel = useCallback(() => {
+    dispatch(resetForm());
+    dispatch(resetQuestions());
+    navigate('/forms');
+  }, [dispatch, navigate]);
 
   return (
     <div className='max-w-4xl mx-auto p-6 space-y-6'>
-      <FormMetaView {...form} />
+      <FormMetaRenderer {...form} />
       {questions &&
         questions.length > 0 &&
         questions.map((question) => (
@@ -35,7 +38,7 @@ const FormViewContainer = () => {
       <div className='flex space-y-6 w-full max-w-3xl mx-auto justify-end-safe gap-2'>
         <button
           className='flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg transition cursor-pointer'
-          onClick={() => navigate('/forms')}
+          onClick={() => handleCancel()}
         >
           목록
         </button>

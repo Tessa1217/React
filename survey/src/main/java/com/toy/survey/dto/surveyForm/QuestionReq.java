@@ -1,9 +1,7 @@
 package com.toy.survey.dto.surveyForm;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-import com.toy.survey.domain.code.Code;
 import com.toy.survey.domain.survey.Question;
 import com.toy.survey.enums.QuestionType;
 
@@ -32,8 +30,7 @@ public class QuestionReq {
   private List<OptionItemReq> options;
 
   public Question toEntity() {
-    Question question =  Question.builder()           
-                                 .id(id)                      
+    Question question =  Question.builder()                                                            
                                  .questionText(questionText)                                 
                                  .isRequired(isRequired)
                                  .questionOrder(questionOrder)

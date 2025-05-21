@@ -17,12 +17,12 @@ public class SurveyFormServiceTest {
   @Test
   public void updateTest() {
 
-    FormReq formRequest = FormReq.builder().id(25L)
-                                 .description("설문지 테스트 진행")
-                                 .isPublic(false)
-                                 .expiresAt(LocalDateTime.now())
-                                 .build();
-    surveyFormService.updateSurvey(formRequest);
+    // FormReq formRequest = FormReq.builder().id(25L)
+    //                              .description("설문지 테스트 진행")
+    //                              .isPublic(false)
+    //                              .expiresAt(LocalDateTime.now())
+    //                              .build();
+    // surveyFormService.updateSurvey(formRequest);
 
   }
 

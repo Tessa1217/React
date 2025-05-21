@@ -1,3 +1,4 @@
+import React from 'react';
 const ParagraphViewer = ({ id, mode, value, handleChange }) => {
   return (
     <textarea
@@ -12,4 +13,4 @@ const ParagraphViewer = ({ id, mode, value, handleChange }) => {
   );
 };
 
-export default ParagraphViewer;
+export default React.memo(ParagraphViewer);
