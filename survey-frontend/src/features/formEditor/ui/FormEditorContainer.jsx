@@ -98,7 +98,7 @@ const FormEditorContainer = () => {
   }, [dispatch, handleSaveAfter, generateFormData, isEditMode]);
 
   return (
-    <div class='relative'>
+    <div className='relative'>
       <FormEditorSidebar
         type={type}
         onChange={handleTypeChange}
