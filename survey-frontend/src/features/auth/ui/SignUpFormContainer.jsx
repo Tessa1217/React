@@ -43,7 +43,8 @@ const SignUpFormContainer = () => {
     );
   };
 
-  const handleDupliacteEmailCheck = async () => {
+  const handleDupliacteEmailCheck = async (e) => {
+    e.stopPropagation();
     const { data } = await checkDuplicateEmail(signUpForm.email);
     if (data) {
       openModal({

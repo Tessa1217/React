@@ -40,7 +40,7 @@ const SignUpForm = ({
                   ? 'bg-gray-400'
                   : 'bg-blue-600 hover:bg-blue-700'
               }`}
-              onClick={onDuplicateEmailCheck}
+              onClick={(e) => onDuplicateEmailCheck(e)}
               disabled={duplicateEmailCheck}
             >
               {duplicateEmailCheck ? '확인완료' : '중복확인'}

@@ -7,6 +7,7 @@ const DefaultModal = ({ id, type, title, description, onClose, onSuccess }) => {
       <button
         id='closeModal'
         className='absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl font-bold cursor-pointer'
+        onClick={onClose}
       >
         &times;
       </button>
