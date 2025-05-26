@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.toy.survey.dto.surveyForm.FormReq;
-import com.toy.survey.service.SurveyFormService;
+import com.toy.survey.service.surveyForm.SurveyFormService;
 
 import lombok.RequiredArgsConstructor;
 

@@ -1,4 +1,4 @@
-package com.toy.survey.service;
+package com.toy.survey.service.surveyForm;
 
 import java.util.List;
 import java.util.Map;
@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,7 +55,7 @@ public class SurveyFormServiceImpl implements SurveyFormService {
   @Transactional
   public void saveSurvey(FormReq formRequest) {
 
-    User user = userRepository.findByEmail("yj.kwon@fusionsoft.co.kr");
+    User user = userRepository.findByEmail("yj.kwon@fusionsoft.co.kr").orElseThrow(() -> new UsernameNotFoundException("이메일 없습니다."));
 
     Form form = formRequest.toEntity();
     form.setUser(user);

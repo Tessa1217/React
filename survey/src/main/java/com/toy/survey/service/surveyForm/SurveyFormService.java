@@ -1,4 +1,4 @@
-package com.toy.survey.service;
+package com.toy.survey.service.surveyForm;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

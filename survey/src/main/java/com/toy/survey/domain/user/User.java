@@ -35,4 +35,8 @@ public class User extends CommonSystemField {
   @Column(length = 100)
   private String name;
 
+  public void setEncodedPassword(String encodedPassword) {
+    this.password = encodedPassword;
+  }
+
 }

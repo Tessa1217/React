@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.toy.survey.dto.surveyForm.FormReq;
+import com.toy.survey.service.surveyForm.SurveyFormService;
 
 @SpringBootTest
 public class SurveyFormServiceTest {

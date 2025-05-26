@@ -1,16 +1,16 @@
 import { useRef } from 'react';
 import { useModalContext } from '@/shared/contexts/ModalContext';
-export const useModal = ({
-  type = 'alert',
-  id,
-  title,
-  description,
-  customModal,
-}) => {
+export const useModal = () => {
   const { addModal, removeModal } = useModalContext();
   const modalRef = useRef(() => {});
 
-  const openModal = () => {
+  const openModal = ({
+    type = 'alert',
+    id,
+    title,
+    description,
+    customModal,
+  }) => {
     return new Promise((resolve) => {
       modalRef.current = resolve;
 
@@ -20,8 +20,14 @@ export const useModal = ({
           type,
           title,
           description,
-          onClose: closeModal,
-          onSuccess: () => resolve(true),
+          onClose: () => {
+            resolve(false);
+            removeModal(id);
+          },
+          onSuccess: () => {
+            resolve(true);
+            removeModal(id);
+          },
         });
       }
 
@@ -30,16 +36,20 @@ export const useModal = ({
           id,
           type,
           customModal: customModal || <></>,
+          onClose: () => {
+            resolve(false);
+            removeModal(id);
+          },
         });
       }
     });
   };
 
-  const closeModal = () => {
-    modalRef.current(false);
-    console.log(id);
-    removeModal(id);
-  };
+  // const closeModal = () => {
+  //   modalRef.current(false);
+  //   console.log(id);
+  //   removeModal(id);
+  // };
 
-  return { openModal, closeModal };
+  return { openModal };
 };

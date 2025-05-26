@@ -9,6 +9,7 @@ import pagingReducer from '@/shared/model/paging.slice';
 import formReducer from '@/entities/form/model/form.slice';
 import questionReducer from '@/entities/question/model/question.slice';
 import formListReducer from '@/features/formList/model/formList.slice';
+import authReducer from '@/features/auth/model/auth.slice';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -37,6 +38,7 @@ const storeReducer = combineReducers({
   form: formReducer,
   question: questionReducer,
   formList: formListReducer,
+  auth: authReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, storeReducer);

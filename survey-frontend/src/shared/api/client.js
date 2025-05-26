@@ -1,4 +1,6 @@
 import axios from 'axios';
+import store from '@/app/store';
+
 const baseURL = import.meta.env.VITE_APP_SERVER_URL;
 
 const client = axios.create({
@@ -12,5 +14,17 @@ const client = axios.create({
     },
   },
 });
+
+client.interceptors.request.use(
+  (config) => {
+    const { auth } = store.getState();
+    const token = auth?.accessToken;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 export default client;

@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
-// import LoginPage from '@/pages/LoginPage';
-// import SignupPage from '@/pages/SignupPage';
+import AuthGuard from '@/shared/router/AuthGuard';
+import LoginPage from '@/pages/LoginPage';
+import SignupPage from '@/pages/SignupPage';
 import FormListPage from '@/pages/FormListPage';
 import FormEditorPage from '@/pages/FormEditorPage';
 import FormDetailPage from '@/pages/FormDetailPage';
@@ -10,15 +11,19 @@ import FormDetailPage from '@/pages/FormDetailPage';
 const AppRouter = () => {
   return (
     <Routes>
-      <Route index element={<FormEditorPage />} />
-      {/* <Route path='/login' element={<LoginPage />} />
-    <Route path='/signup' element={<SignupPage />} /> */}
-      <Route path='/forms' element={<FormListPage />} />
-      <Route path='/forms/new' element={<FormEditorPage />} />
-      <Route path='/forms/:id' element={<FormDetailPage />} />
-      <Route path='/forms/:id/edit' element={<FormEditorPage />} />
-      {/*  <Route path='/responses' element={<ResponseListPage />} />
+      <Route path='/login' element={<LoginPage />} />
+      <Route path='/signup' element={<SignupPage />} />
+      <Route element={<AuthGuard />}>
+        <Route index element={<FormEditorPage />} />
+        <Route path='/forms' element={<FormListPage />} />
+        <Route path='/forms/new' element={<FormEditorPage />} />
+        <Route path='/forms/:id' element={<FormDetailPage />} />
+        <Route path='/forms/:id/edit' element={<FormEditorPage />} />
+        {/*  <Route path='/responses' element={<ResponseListPage />} />
     <Route path='/responses/:formId' element={<ResponseSubmitPage />} /> */}
+      </Route>
+      {/* 404 처리 */}
+      <Route path='*' element={<div>Not Found</div>} />
     </Routes>
   );
 };
