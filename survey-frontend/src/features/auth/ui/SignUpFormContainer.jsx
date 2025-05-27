@@ -1,75 +1,103 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { useModal } from '@/shared/hooks/useModal';
-import { checkDuplicateEmail } from '@/features/auth/model/check.api';
-import { sendSignUpRequest } from '@/features/auth/model/auth.slice';
+// 회원가입 UI
 import SignUpForm from '@/features/auth/ui/SignUpForm';
-const SignUpFormContainer = () => {
-  const dispatch = useDispatch();
+import { memo, useState } from 'react';
+import { useImmer } from 'use-immer';
+import { useNavigate } from 'react-router-dom';
+import { useAppMutation } from '@/shared/hooks/useAppMutation';
+import {
+  sendSignUp,
+  checkDuplicateEmail,
+} from '@/features/auth/model/auth.api';
+
+const SignUpFormContainer = memo(() => {
   const navigate = useNavigate();
-  const { openModal } = useModal();
+
   const [signUpForm, setSignUpForm] = useState({
     email: '',
     password: '',
     name: '',
   });
 
-  const passwordMatchErrorMsg = '비밀번호가 일치하지 않습니다.';
+  // 이메일 중복 확인 요청
+  const { mutate: checkEmail, isPending: isCheckingEmail } = useAppMutation(
+    checkDuplicateEmail,
+    {
+      onSuccess: ({ data }) => {
+        updateChecker((draft) => {
+          draft.emailCheck.checked = true;
+          draft.emailCheck.duplicate = data;
+        });
+      },
+    }
+  );
 
-  const [passwordChecker, setPasswordChecker] = useState({
-    passwordCheck: '',
-    passwordMatchError: '',
+  // 회원가입 요청
+  const { mutate: signUp, isPending: isSigningUp } = useAppMutation(
+    sendSignUp,
+    { onSuccess: () => navigate('/') }
+  );
+
+  const [checker, updateChecker] = useImmer({
+    passwordCheck: {
+      value: '',
+      matched: true,
+    },
+    emailCheck: {
+      duplicate: false,
+      checked: false,
+    },
   });
 
-  const [duplicateEmailCheck, setDuplicateEmailCheck] = useState(false);
-
+  // 입력값 변경 핸들러
   const handleChange = (e) => {
     setSignUpForm({ ...signUpForm, [e.target.name]: e.target.value });
   };
 
+  // 이메일 변경 확인 핸들러
+  const handleEmailChange = (e) => {
+    updateChecker((draft) => {
+      draft.emailCheck.checked = false;
+    });
+    handleChange(e);
+  };
+
+  // 비밀번호 변경 확인 핸들러
   const handlePasswordCheckChange = (e) => {
-    const check = e.target.value == signUpForm.password;
-    setPasswordChecker({
-      passwordCheck: e.target.value,
-      passwordMatchError: check ? '' : passwordMatchErrorMsg,
+    updateChecker((draft) => {
+      draft.passwordCheck.value = e.target.value;
+      draft.passwordCheck.matched = e.target.value == signUpForm.password;
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(
-      sendSignUpRequest({ param: signUpForm, callbackFn: () => navigate('/') })
-    );
+  // 이메일 중복확인 요청 핸들러
+  const handleDuplicateEmailCheck = (e) => {
+    e.stopPropagation();
+    checkEmail(signUpForm.email);
   };
 
-  const handleDupliacteEmailCheck = async (e) => {
-    e.stopPropagation();
-    const { data } = await checkDuplicateEmail(signUpForm.email);
-    if (data) {
-      openModal({
-        type: 'alert',
-        id: 'alertModal',
-        title: 'Email 중복확인',
-        description: 'Email이 중복됩니다.',
-      });
-      return;
-    }
-    setDuplicateEmailCheck(!data);
+  // 폼 요청 핸들러
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    signUp(signUpForm);
   };
 
   return (
     <SignUpForm
       email={signUpForm.email}
       password={signUpForm.password}
-      passwordCheck={passwordChecker.passwordCheck}
-      passwordMatchError={passwordChecker.passwordMatchError}
-      duplicateEmailCheck={duplicateEmailCheck}
+      name={signUpForm.name}
+      passwordCheck={checker.passwordCheck.value}
+      passwordCheckMatched={checker.passwordCheck.matched}
+      isCheckingEmail={isCheckingEmail}
+      emailChecked={checker.emailCheck.checked}
+      emailDuplicate={checker.emailCheck.duplicate}
       onChange={handleChange}
+      onEmailChange={handleEmailChange}
       onPasswordCheckChange={handlePasswordCheckChange}
-      onDuplicateEmailCheck={handleDupliacteEmailCheck}
+      onDuplicateEmailCheck={handleDuplicateEmailCheck}
       onSubmit={handleSubmit}
+      isSigningUp={isSigningUp}
     />
   );
-};
+});
 export default SignUpFormContainer;

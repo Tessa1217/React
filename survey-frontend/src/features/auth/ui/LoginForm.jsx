@@ -1,5 +1,11 @@
 import React from 'react';
-const LoginForm = ({ email, password, onFormChange, onSubmit }) => {
+const LoginForm = ({
+  email,
+  password,
+  onFormChange,
+  onSubmit,
+  isLoggingIn,
+}) => {
   return (
     <div className='flex min-h-screen items-center justify-center bg-gray-100 px-4'>
       <div className='w-full max-w-md bg-white p-8 rounded-2xl shadow-xl space-y-6'>
@@ -36,9 +42,10 @@ const LoginForm = ({ email, password, onFormChange, onSubmit }) => {
 
           <button
             type='submit'
+            disabled={isLoggingIn}
             className='w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200'
           >
-            로그인
+            {isLoggingIn ? '로그인 중...' : '로그인'}
           </button>
         </form>
 

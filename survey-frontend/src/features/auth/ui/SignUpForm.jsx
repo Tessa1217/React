@@ -1,16 +1,33 @@
 import RequiredAsterick from '@/shared/ui/form/RequiredAsterick';
+
+import { useMemo } from 'react';
+
+const passwordMatchErrorMsg = '비밀번호가 일치하지 않습니다.';
+
+const duplicateEmailErrorMsg = '중복된 이메일이 존재합니다.';
+
 const SignUpForm = ({
   email,
-  duplicateEmailCheck,
-  name,
   password,
+  name,
   passwordCheck,
+  passwordCheckMatched,
+  isCheckingEmail,
+  emailChecked,
+  emailDuplicate,
   onChange,
-  onSubmit,
-  onDuplicateEmailCheck,
+  onEmailChange,
   onPasswordCheckChange,
-  passwordMatchError,
+  onDuplicateEmailCheck,
+  onSubmit,
+  isSigningUp,
 }) => {
+  // 중복 체크 여부
+  const duplicateChecked = useMemo(
+    () => emailChecked && !emailDuplicate,
+    [emailChecked, emailDuplicate]
+  );
+
   return (
     <div className='min-h-screen flex items-center justify-center bg-gray-100'>
       <form
@@ -30,22 +47,29 @@ const SignUpForm = ({
               type='email'
               name='email'
               value={email}
-              onChange={onChange}
+              onChange={onEmailChange}
               className='mt-1 block w-80 px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500'
               required
             />
             <button
               className={`w-30 text-white px-4 py-2 rounded-lg transition cursor-pointer ${
-                duplicateEmailCheck
+                duplicateChecked
                   ? 'bg-gray-400'
                   : 'bg-blue-600 hover:bg-blue-700'
               }`}
               onClick={(e) => onDuplicateEmailCheck(e)}
-              disabled={duplicateEmailCheck}
+              disabled={isCheckingEmail || duplicateChecked}
             >
-              {duplicateEmailCheck ? '확인완료' : '중복확인'}
+              {duplicateChecked ? '확인완료' : '중복확인'}
             </button>
           </div>
+          {emailChecked && emailDuplicate && (
+            <div>
+              <p className='text-sm text-red-600 mt-1'>
+                {duplicateEmailErrorMsg}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Password */}
@@ -74,8 +98,8 @@ const SignUpForm = ({
             className='mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500'
             required
           />
-          {passwordMatchError && (
-            <p className='text-sm text-red-600 mt-1'>{passwordMatchError}</p>
+          {!passwordCheckMatched && (
+            <p className='text-sm text-red-600 mt-1'>{passwordMatchErrorMsg}</p>
           )}
         </div>
         {/* Name */}
@@ -96,7 +120,8 @@ const SignUpForm = ({
         {/* Submit */}
         <button
           type='submit'
-          className='w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300'
+          disabled={isSigningUp || !passwordCheckMatched || !duplicateChecked}
+          className='w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-2 px-4 rounded-lg transition duration-300'
         >
           회원가입
         </button>
