@@ -41,7 +41,7 @@ public class SurveyFormServiceImpl implements SurveyFormService {
   
   @Override
   public Page<FormRes> getSurveyFormList(Pageable pageable) {
-    Page<Form> formPage = surveyFormRepository.findAll(pageable);    
+    Page<Form> formPage = surveyFormRepository.findAllByOrderByCreatedAtDesc(pageable);    
     return formPage.map(FormRes::fromEntity);
   }
 

@@ -1,6 +1,7 @@
 -- 사용자 테이블
 CREATE TABLE users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY comment '사용자 ID',
+    user_id VARCHAR(50) NOT NULL UNIQUE comment '사용자 사용 ID',
     email VARCHAR(255) NOT NULL UNIQUE comment '사용자 이메일',
     password VARCHAR(255) NOT NULL comment '사용자 비밀번호',
     name VARCHAR(100) comment '사용자 명',

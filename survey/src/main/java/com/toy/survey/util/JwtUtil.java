@@ -50,7 +50,7 @@ public class JwtUtil {
 
   private String createToken(UserRes user, long accessTokenExpireTime) {
       Claims claims = Jwts.claims();
-      claims.put("userId", user.getId());
+      claims.put("userId", user.getUserId());
       claims.put("email", user.getEmail());
       claims.put("name", user.getName());
 
@@ -65,8 +65,8 @@ public class JwtUtil {
                  .compact();
   }
 
-  public Long getUserId(String token) {
-    return parseClaims(token).get("userId", Long.class);
+  public String getUserId(String token) {
+    return parseClaims(token).get("userId", String.class);
   }
 
   public boolean validateToken(String token) {

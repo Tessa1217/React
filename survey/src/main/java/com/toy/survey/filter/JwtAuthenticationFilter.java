@@ -31,11 +31,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     throws ServletException, IOException {
       String token = jwtUtil.resolveAccessToken(request);
       if (StringUtils.hasText(token) && jwtUtil.validateToken(token)) {
-        Long userId = jwtUtil.getUserId(token);
+        String userId = jwtUtil.getUserId(token);
 
         UsernamePasswordAuthenticationToken auth = 
           new UsernamePasswordAuthenticationToken(userId, null, List.of());
-
+          
         SecurityContextHolder.getContext().setAuthentication(auth);
       }
 

@@ -15,6 +15,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public class SignUpUserReq {
 
+  @NotBlank(message = "아이디는 필수값입니다.")
+  @Length(min = 5, max = 50)
+  private String userId;
+
   @NotBlank(message = "이메일은 필수값입니다.")
   @Email(message = "올바른 이메일 주소를 입력해주세요.")
   @Length(max = 200)
@@ -30,7 +34,8 @@ public class SignUpUserReq {
 
   public User toEntity() {
     User user = User.builder()
-                    .email(email)
+                    .userId(userId)
+                    .email(email)                    
                     .password(password)
                     .name(name)
                     .build();

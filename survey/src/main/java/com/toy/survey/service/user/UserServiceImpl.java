@@ -28,8 +28,8 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public String login(LoginUserReq req) {
-    String email = req.getEmail();
-    User user = userRepository.findByEmail(email)
+    String userId = req.getUserId();
+    User user = userRepository.findByUserId(userId)
                               .orElseThrow(() -> new UsernameNotFoundException("이메일이 존재하지 않습니다."));
 
     String password = req.getPassword();                              
@@ -39,12 +39,19 @@ public class UserServiceImpl implements UserService {
 
     UserRes userResDTO = UserRes.builder()
                                 .id(user.getId())
+                                .userId(user.getUserId())
                                 .email(user.getEmail())
                                 .name(user.getName())
                                 .build();
     
     return jwtUtil.createAccessToken(userResDTO);
 
+  }
+
+  @Override
+  public boolean checkDuplicateUserId(String userId) {
+    Optional<User> duplicateUser = userRepository.findByUserId(userId);
+    return duplicateUser.isPresent();    
   }
 
   @Override

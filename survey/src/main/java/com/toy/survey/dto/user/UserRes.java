@@ -11,6 +11,8 @@ public class UserRes {
 
   private Long id;
 
+  private String userId;
+
   private String email;
 
   private String name;

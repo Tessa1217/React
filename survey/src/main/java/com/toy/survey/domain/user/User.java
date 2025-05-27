@@ -26,6 +26,9 @@ public class User extends CommonSystemField {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(length = 50, nullable = false)
+  private String userId;
+
   @Column(length = 255, nullable = false)
   private String email;
 

@@ -28,10 +28,15 @@ public class UserController {
     return ResponseEntity.ok().body(token);
   }
 
-  @GetMapping("/{email}/exists")
+  @GetMapping("/exists/email/{email}")
   public ResponseEntity<Boolean> checkDuplicateEmail(@PathVariable String email) {
     return ResponseEntity.ok(userService.checkDuplicateEmail(email));
   }
+
+  @GetMapping("/exists/userId/{userId}")
+  public ResponseEntity<Boolean> checkDuplicateUserId(@PathVariable String userId) {
+    return ResponseEntity.ok(userService.checkDuplicateUserId(userId));
+  }  
 
   @PostMapping("/signUp")
   public ResponseEntity<Boolean> signUp(@RequestBody @Validated SignUpUserReq signUpUser) {
