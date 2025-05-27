@@ -8,6 +8,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import com.toy.survey.config.CustomUserPrincipal;
+
 @Component
 public class AuthenticationAware implements AuditorAware<String> {
 
@@ -18,10 +20,10 @@ public class AuthenticationAware implements AuditorAware<String> {
                 .filter(Authentication::isAuthenticated)
                 .map(Authentication::getPrincipal)
                 .map(principal -> {
-                  if (principal instanceof String) {
-                    return (String) principal;
-                  }
-                  return null;
+                    if (principal instanceof CustomUserPrincipal) {
+                      return ((CustomUserPrincipal) principal).getUserId(); 
+                    } 
+                    return null;
                 });                
   }
   

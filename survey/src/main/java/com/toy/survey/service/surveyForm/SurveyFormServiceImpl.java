@@ -21,8 +21,8 @@ import com.toy.survey.dto.surveyForm.FormRes;
 import com.toy.survey.dto.surveyForm.OptionItemReq;
 import com.toy.survey.dto.surveyForm.QuestionReq;
 import com.toy.survey.repository.code.CodeRepository;
-import com.toy.survey.repository.survey.SurveyFormQueryDSLRepository;
-import com.toy.survey.repository.survey.SurveyFormRepository;
+import com.toy.survey.repository.surveyForm.SurveyFormQueryDSLRepository;
+import com.toy.survey.repository.surveyForm.SurveyFormRepository;
 import com.toy.survey.repository.user.UserRepository;
 
 import lombok.RequiredArgsConstructor;

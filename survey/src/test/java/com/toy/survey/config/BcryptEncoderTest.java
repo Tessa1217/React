@@ -1,4 +1,4 @@
-package com.toy.config;
+package com.toy.survey.config;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

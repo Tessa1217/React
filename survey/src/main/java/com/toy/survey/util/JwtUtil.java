@@ -50,6 +50,7 @@ public class JwtUtil {
 
   private String createToken(UserRes user, long accessTokenExpireTime) {
       Claims claims = Jwts.claims();
+      claims.put("id", user.getId());
       claims.put("userId", user.getUserId());
       claims.put("email", user.getEmail());
       claims.put("name", user.getName());
@@ -63,6 +64,10 @@ public class JwtUtil {
                  .setExpiration(Date.from(tokenValidity.toInstant()))
                  .signWith(key, SignatureAlgorithm.HS256)
                  .compact();
+  }
+
+  public Long getId(String token) {
+    return parseClaims(token).get("id", Long.class);
   }
 
   public String getUserId(String token) {

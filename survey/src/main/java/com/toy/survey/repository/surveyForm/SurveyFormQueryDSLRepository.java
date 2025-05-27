@@ -1,4 +1,4 @@
-package com.toy.survey.repository.survey;
+package com.toy.survey.repository.surveyForm;
 
 import java.util.List;
 import java.util.stream.Collectors;

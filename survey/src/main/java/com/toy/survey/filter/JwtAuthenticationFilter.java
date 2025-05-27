@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.toy.survey.config.CustomUserPrincipal;
 import com.toy.survey.util.JwtUtil;
 
 import jakarta.servlet.FilterChain;
@@ -31,10 +32,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     throws ServletException, IOException {
       String token = jwtUtil.resolveAccessToken(request);
       if (StringUtils.hasText(token) && jwtUtil.validateToken(token)) {
+        Long id = jwtUtil.getId(token);
         String userId = jwtUtil.getUserId(token);
 
+        CustomUserPrincipal principal = CustomUserPrincipal
+                                           .builder()
+                                           .id(id)
+                                           .userId(userId)
+                                           .build();
+
         UsernamePasswordAuthenticationToken auth = 
-          new UsernamePasswordAuthenticationToken(userId, null, List.of());
+          new UsernamePasswordAuthenticationToken(principal, null, List.of());
           
         SecurityContextHolder.getContext().setAuthentication(auth);
       }
