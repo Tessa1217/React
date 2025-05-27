@@ -1,31 +1,24 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { useCallback, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchFormRequest, resetForm } from '@/entities/form/model/form.slice';
-import { resetQuestions } from '@/entities/question/model/question.slice';
-import { selectForm } from '@/entities/form/model/form.selectors';
-import { selectQuestions } from '@/entities/question/model/question.selectors';
+import { memo, useCallback } from 'react';
+import { fetchFormById } from '@/entities/form/model/form.api';
+import { useAppQuery } from '@/shared/hooks/useAppQuery';
 import FormMetaRenderer from '@/entities/form/ui/FormMetaRenderer';
 import QuestionCardRenderer from '@/entities/question/ui/QuestionCardRenderer';
-const FormViewContainer = () => {
-  const navigate = useNavigate();
 
-  const dispatch = useDispatch();
+const FormViewContainer = memo(() => {
+  const navigate = useNavigate();
 
   const { id: formId } = useParams();
 
-  const form = useSelector(selectForm);
-  const questions = useSelector(selectQuestions);
+  const { data: response } = useAppQuery(
+    ['formView', formId],
+    () => fetchFormById(formId),
+    { enabled: !!formId }
+  );
 
-  useEffect(() => {
-    dispatch(fetchFormRequest({ formId }));
-  }, [dispatch, formId]);
+  const { questions, ...form } = response?.data || {};
 
-  const handleCancel = useCallback(() => {
-    dispatch(resetForm());
-    dispatch(resetQuestions());
-    navigate('/forms');
-  }, [dispatch, navigate]);
+  const handleCancel = useCallback(() => navigate('/forms'), [navigate]);
 
   return (
     <div className='max-w-4xl mx-auto p-6 space-y-6'>
@@ -45,6 +38,6 @@ const FormViewContainer = () => {
       </div>
     </div>
   );
-};
+});
 
 export default FormViewContainer;

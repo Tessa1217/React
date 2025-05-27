@@ -1,6 +1,8 @@
-import useGlobalLoading from '@/shared/hooks/useGlobalLoading';
-const LoadingLayer = () => {
-  const { loading } = useGlobalLoading();
+import { memo } from 'react';
+import { useSelector } from 'react-redux';
+import { loadingState } from '@/shared/model/loading.selector';
+const LoadingLayer = memo(() => {
+  const loading = useSelector(loadingState);
   if (!loading) {
     return null;
   }
@@ -9,5 +11,5 @@ const LoadingLayer = () => {
       <div className='spinner'></div>
     </div>
   );
-};
+});
 export default LoadingLayer;

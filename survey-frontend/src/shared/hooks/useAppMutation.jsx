@@ -1,24 +1,25 @@
 import { useMutation } from '@tanstack/react-query';
 import { useModal } from '@/shared/hooks/useModal';
-import useGlobalLoading from './useGlobalLoading';
+import { useDispatch } from 'react-redux';
+import { startLoading, stopLoading } from '@/shared/model/loading.slice';
 
 export const useAppMutation = (mutationFn, options = { isLoading: true }) => {
   const { openModal } = useModal();
-  const { startLoading, stopLoading } = useGlobalLoading();
+  const dispatch = useDispatch();
 
   return useMutation({
     mutationFn,
     ...options,
     onMutate: () => {
       if (options.isLoading) {
-        startLoading();
+        dispatch(startLoading());
       }
 
       if (options.onMutate) options.onMutate;
     },
     onError: (error, ...args) => {
       if (options.isLoading) {
-        stopLoading();
+        dispatch(stopLoading());
       }
 
       if (options.onError) return options.onError(error, ...args);
@@ -32,7 +33,7 @@ export const useAppMutation = (mutationFn, options = { isLoading: true }) => {
     },
     onSettled: (...args) => {
       if (options.isLoading) {
-        stopLoading();
+        dispatch(stopLoading());
       }
 
       if (options.onSettled) options.onSettled(...args);

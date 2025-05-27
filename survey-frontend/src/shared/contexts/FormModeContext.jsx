@@ -1,10 +1,10 @@
-import { createContext, useContext, useState } from 'react';
+import { memo, createContext, useContext, useState } from 'react';
 
 const FormModeContext = createContext();
 
 export const useMode = () => useContext(FormModeContext);
 
-export const FormModeProvider = ({ children, initialMode = 'edit' }) => {
+export const FormModeProvider = memo(({ children, initialMode = 'edit' }) => {
   const [mode, setMode] = useState(initialMode);
   const toggleMode = () => {
     setMode((prevMode) => (prevMode === 'edit' ? 'preview' : 'edit'));
@@ -14,4 +14,4 @@ export const FormModeProvider = ({ children, initialMode = 'edit' }) => {
       {children}
     </FormModeContext.Provider>
   );
-};
+});

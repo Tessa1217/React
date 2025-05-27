@@ -5,7 +5,7 @@ import SignupPage from '@/pages/SignupPage';
 import FormListPage from '@/pages/FormListPage';
 import FormEditorPage from '@/pages/FormEditorPage';
 import FormDetailPage from '@/pages/FormDetailPage';
-// import ResponseListPage from '@/pages/ResponseListPage';
+import ResponseListPage from '@/pages/ResponseListPage';
 // import ResponseSubmitPage from '@/pages/ResponseSubmitPage';
 
 const AppRouter = () => {
@@ -19,8 +19,8 @@ const AppRouter = () => {
         <Route path='/forms/new' element={<FormEditorPage />} />
         <Route path='/forms/:id' element={<FormDetailPage />} />
         <Route path='/forms/:id/edit' element={<FormEditorPage />} />
-        {/*  <Route path='/responses' element={<ResponseListPage />} />
-    <Route path='/responses/:formId' element={<ResponseSubmitPage />} /> */}
+        <Route path='/responses' element={<ResponseListPage />} />
+        {/*  <Route path='/responses/:formId' element={<ResponseSubmitPage />} /> */}
       </Route>
       {/* 404 처리 */}
       <Route path='*' element={<div>Not Found</div>} />

@@ -24,5 +24,14 @@ export const sendLogin = (loginForm) => {
  * @returns {Promise} 이메일 중복 체크 Promise
  */
 export const checkDuplicateEmail = (email) => {
-  return client.get(`/user/${email}/exists`);
+  return client.get(`/user/exists/email/${email}`);
+};
+
+/**
+ * @description 아이디 중복 체크 API
+ * @param {String} userId
+ * @returns {Promise} 아이디 중복 체크 Promise
+ */
+export const checkDuplicateUserId = (userId) => {
+  return client.get(`/user/exists/userId/${userId}`);
 };

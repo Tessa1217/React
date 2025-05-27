@@ -11,11 +11,15 @@ const pagingSlice = createSlice({
       const { key, paging } = payload;
       state[key] = { ...state[key], ...paging };
     },
+    setPagingNumber: (state, { payload }) => {
+      const { key, page } = payload;
+      state[key].pageNumber = page;
+    },
     resetPaging: (state, { payload: key }) => {
       delete state[key];
     },
   },
 });
 
-export const { setPaging, resetPaging } = pagingSlice.actions;
+export const { setPaging, setPagingNumber, resetPaging } = pagingSlice.actions;
 export default pagingSlice.reducer;

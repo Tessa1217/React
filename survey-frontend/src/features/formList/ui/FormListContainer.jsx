@@ -1,37 +1,52 @@
-import { useSelector, useDispatch } from 'react-redux';
-import { useEffect, useCallback, useMemo } from 'react';
+import { useSelector, useDispatch, shallowEqual } from 'react-redux';
+import { useCallback, useEffect, useMemo, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchFormListRequest } from '@/features/formList/model/formList.slice';
-import { selectCurrentFormList } from '@/features/formList/model/formList.selectors';
-import { setPaging } from '@/shared/model/paging.slice';
+import { setPaging, setPagingNumber } from '@/shared/model/paging.slice';
 import { selectPagingByKey } from '@/shared/model/paging.selectors';
 import Pagination from '@/shared/ui/pagination/Pagination';
 import FormTable from '@/features/formList/ui/FormTable';
 import { HiCheckCircle } from 'react-icons/hi';
+import { fetchFormList } from '@/features/formList/model/formList.api';
+import { useAppQuery } from '@/shared/hooks/useAppQuery';
 
 const key = 'form';
 
-const FormListContainer = () => {
-  const formList = useSelector(selectCurrentFormList);
-  const paging = useSelector(selectPagingByKey(key));
+const FormListContainer = memo(() => {
+  const paging = useSelector(selectPagingByKey(key), shallowEqual);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handlePagination = useCallback(
     ({ pageable, totalElements, totalPages, numberOfElements }) => {
-      dispatch(
-        setPaging({
-          key,
-          paging: { ...pageable, totalElements, totalPages, numberOfElements },
-        })
-      );
+      const next = {
+        ...pageable,
+        totalElements,
+        totalPages,
+        numberOfElements,
+      };
+
+      if (JSON.stringify(paging) !== JSON.stringify(next)) {
+        dispatch(setPaging({ key, paging: next }));
+      }
     },
-    [dispatch]
+    [dispatch, paging]
   );
 
+  const page = paging.pageNumber;
+
+  const { data: response } = useAppQuery(['form', page], () =>
+    fetchFormList({ page })
+  );
+  const formList = response?.data?.content || [];
+
   useEffect(() => {
-    dispatch(fetchFormListRequest({ callbackFn: handlePagination }));
-  }, [dispatch, handlePagination]);
+    if (response) {
+      const { data } = response;
+      console.log(data);
+      handlePagination(data);
+    }
+  }, [response, handlePagination]);
 
   const handleViewButtonClick = useCallback(
     (formId) => {
@@ -42,14 +57,9 @@ const FormListContainer = () => {
 
   const handlePageChange = useCallback(
     (page) => {
-      dispatch(
-        fetchFormListRequest({
-          param: { page },
-          callbackFn: handlePagination,
-        })
-      );
+      dispatch(setPagingNumber({ key, page }));
     },
-    [dispatch, handlePagination]
+    [dispatch]
   );
 
   const handleUpdateButtonClick = useCallback(
@@ -94,6 +104,6 @@ const FormListContainer = () => {
       </div>
     </div>
   );
-};
+});
 
 export default FormListContainer;

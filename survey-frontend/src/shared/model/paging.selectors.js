@@ -1,1 +1,4 @@
-export const selectPagingByKey = (key) => (state) => state.paging[key] || {};
+export const selectPagingByKey =
+  (key) =>
+  ({ paging }) =>
+    paging[key] || {};

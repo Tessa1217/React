@@ -1,15 +1,15 @@
-import React from 'react';
-import { FaTimes } from 'react-icons/fa';
-const RemoveOptionButton = ({ onRemoveOption, id }) => {
+import { memo } from 'react';
+import FaTimesIcon from '@/shared/ui/icon/FaTimesIcon';
+const RemoveOptionButton = memo(({ onRemoveOption, id }) => {
   return (
     <button
       type='button'
       onClick={() => onRemoveOption(id)}
       className='text-red-500 hover:text-red-700 cursor-pointer'
     >
-      <FaTimes />
+      <FaTimesIcon />
     </button>
   );
-};
+});
 
-export default React.memo(RemoveOptionButton);
+export default RemoveOptionButton;

@@ -1,5 +1,5 @@
-import React from 'react';
-const AddOptionButton = ({ onAddOption, id }) => {
+import { memo } from 'react';
+const AddOptionButton = memo(({ onAddOption, id }) => {
   return (
     <button
       type='button'
@@ -9,6 +9,6 @@ const AddOptionButton = ({ onAddOption, id }) => {
       + 옵션 추가
     </button>
   );
-};
+});
 
-export default React.memo(AddOptionButton);
+export default AddOptionButton;

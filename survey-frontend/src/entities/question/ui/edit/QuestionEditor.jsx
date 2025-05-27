@@ -1,8 +1,7 @@
 import React from 'react';
-import { FaTimes } from 'react-icons/fa';
+import FaTimesIcon from '@/shared/ui/icon/FaTimesIcon';
 
 const QuestionEditor = ({
-  children,
   questionText,
   isRequired,
   onRemoveQuestion,
@@ -10,7 +9,7 @@ const QuestionEditor = ({
   handleRequiredChange,
 }) => {
   return (
-    <div className='p-6 bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow space-y-6 w-full max-w-3xl mx-auto my-4'>
+    <>
       {/* 질문 제목 + 필수 체크 */}
       <div className='flex justify-end'>
         <button
@@ -19,7 +18,7 @@ const QuestionEditor = ({
           aria-label='질문 삭제'
           title='질문 삭제'
         >
-          <FaTimes size={20} />
+          <FaTimesIcon size={20} />
         </button>
       </div>
       <div className='flex gap-2 justify-between items-center'>
@@ -40,8 +39,7 @@ const QuestionEditor = ({
           <span className='text-gray-600 w-100'>필수</span>
         </label>
       </div>
-      {children}
-    </div>
+    </>
   );
 };
 

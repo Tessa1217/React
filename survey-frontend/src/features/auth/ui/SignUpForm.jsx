@@ -6,26 +6,39 @@ const passwordMatchErrorMsg = '비밀번호가 일치하지 않습니다.';
 
 const duplicateEmailErrorMsg = '중복된 이메일이 존재합니다.';
 
+const dupliacteUserIdErrorMsg = '이미 사용된 아이디입니다.';
+
 const SignUpForm = ({
+  userId,
   email,
   password,
   name,
   passwordCheck,
   passwordCheckMatched,
+  isCheckingUserId,
+  userIdChecked,
+  userIdDuplicate,
   isCheckingEmail,
   emailChecked,
   emailDuplicate,
   onChange,
+  onUserIdChange,
   onEmailChange,
   onPasswordCheckChange,
   onDuplicateEmailCheck,
+  onDuplicateUserIdCheck,
   onSubmit,
   isSigningUp,
 }) => {
   // 중복 체크 여부
-  const duplicateChecked = useMemo(
+  const duplicateEmailChecked = useMemo(
     () => emailChecked && !emailDuplicate,
     [emailChecked, emailDuplicate]
+  );
+
+  const duplicateUserIdChecked = useMemo(
+    () => userIdChecked && !userIdDuplicate,
+    [userIdChecked, userIdDuplicate]
   );
 
   return (
@@ -37,6 +50,40 @@ const SignUpForm = ({
         <h2 className='text-2xl font-bold text-center text-gray-800'>
           회원가입
         </h2>
+        {/* 아이디 */}
+        <div>
+          <label className='block text-sm font-medium text-gray-700'>
+            아이디 <RequiredAsterick />
+          </label>
+          <div className='flex gap-2'>
+            <input
+              type='userId'
+              name='userId'
+              value={userId}
+              onChange={onUserIdChange}
+              className='mt-1 block w-80 px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500'
+              required
+            />
+            <button
+              className={`w-30 text-white px-4 py-2 rounded-lg transition cursor-pointer ${
+                duplicateUserIdChecked
+                  ? 'bg-gray-400'
+                  : 'bg-blue-600 hover:bg-blue-700'
+              }`}
+              onClick={(e) => onDuplicateUserIdCheck(e)}
+              disabled={isCheckingUserId || duplicateUserIdChecked}
+            >
+              {duplicateUserIdChecked ? '확인완료' : '중복확인'}
+            </button>
+          </div>
+          {userIdChecked && userIdDuplicate && (
+            <div>
+              <p className='text-sm text-red-600 mt-1'>
+                {dupliacteUserIdErrorMsg}
+              </p>
+            </div>
+          )}
+        </div>
         {/* Email */}
         <div>
           <label className='block text-sm font-medium text-gray-700'>
@@ -53,14 +100,14 @@ const SignUpForm = ({
             />
             <button
               className={`w-30 text-white px-4 py-2 rounded-lg transition cursor-pointer ${
-                duplicateChecked
+                duplicateEmailChecked
                   ? 'bg-gray-400'
                   : 'bg-blue-600 hover:bg-blue-700'
               }`}
               onClick={(e) => onDuplicateEmailCheck(e)}
-              disabled={isCheckingEmail || duplicateChecked}
+              disabled={isCheckingEmail || duplicateEmailChecked}
             >
-              {duplicateChecked ? '확인완료' : '중복확인'}
+              {duplicateEmailChecked ? '확인완료' : '중복확인'}
             </button>
           </div>
           {emailChecked && emailDuplicate && (
@@ -120,7 +167,12 @@ const SignUpForm = ({
         {/* Submit */}
         <button
           type='submit'
-          disabled={isSigningUp || !passwordCheckMatched || !duplicateChecked}
+          disabled={
+            isSigningUp ||
+            !passwordCheckMatched ||
+            !duplicateEmailChecked ||
+            !duplicateUserIdChecked
+          }
           className='w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-2 px-4 rounded-lg transition duration-300'
         >
           회원가입

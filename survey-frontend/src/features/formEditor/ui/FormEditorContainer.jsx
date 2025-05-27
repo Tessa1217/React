@@ -1,101 +1,182 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  changeValue,
-  resetForm,
-  fetchFormRequest,
-} from '@/entities/form/model/form.slice';
-import {
-  addQuestion,
-  removeQuestion,
-  changeQuestionText,
-  changeRequired,
-  addOption,
-  removeOption,
-  changeOption,
-  resetQuestions,
-} from '@/entities/question/model/question.slice';
-import { selectForm } from '@/entities/form/model/form.selectors';
-import { selectQuestions } from '@/entities/question/model/question.selectors';
-import {
-  updateFormRequest,
-  saveFormRequest,
-} from '@/features/formEditor/model/formEditor.slice';
 import { HiCheckCircle } from 'react-icons/hi';
 import FormMetaRenderer from '@/entities/form/ui/FormMetaRenderer';
 import QuestionCardRenderer from '@/entities/question/ui/QuestionCardRenderer';
 import FormEditorSidebar from '@/features/formEditor/ui/FormEditorSidebar';
 import { FaTimesCircle } from 'react-icons/fa';
 
+import { useImmer } from 'use-immer';
+import { fetchFormById } from '@/entities/form/model/form.api';
+import {
+  saveForm,
+  updateForm,
+} from '@/features/formEditor/model/formEditor.api';
+import { useAppQuery } from '@/shared/hooks/useAppQuery';
+import { useAppMutation } from '@/shared/hooks/useAppMutation';
+
 const FormEditorContainer = () => {
   const navigate = useNavigate();
   const { id: formId } = useParams();
-
-  const isEditMode = Boolean(formId);
-
-  const form = useSelector(selectForm);
-  const questions = useSelector(selectQuestions);
-
+  const [form, setForm] = useState({
+    title: '',
+    description: '',
+    isPublic: false,
+    requiresLogin: false,
+    expiresAt: '',
+  });
+  const [questions, updateQuestions] = useImmer([]);
   const [type, setType] = useState('MULTIPLE_CHOICE');
 
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (isEditMode && formId) {
-      dispatch(fetchFormRequest({ formId }));
-    }
-  }, [isEditMode, formId, dispatch]);
-
-  const handleChange = useCallback(
-    (id, value) => {
-      dispatch(changeValue({ id, value }));
-    },
-    [dispatch]
+  const { data: response } = useAppQuery(
+    ['formEdit', formId],
+    () => fetchFormById(formId),
+    { enabled: !!formId }
   );
 
-  const handleTypeChange = useCallback((type) => {
-    setType(type);
-  }, []);
+  const { mutate } = useAppMutation(formId ? updateForm : saveForm, {
+    onSuccess: () => {
+      navigate('/forms');
+    },
+  });
+
+  useEffect(() => {
+    if (formId && response?.data) {
+      const { questions, ...rest } = response.data;
+      setForm(rest);
+      updateQuestions(() => questions || []);
+    }
+  }, [response, formId, updateQuestions]);
+
+  const handleChange = useCallback(
+    (e) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value })),
+    []
+  );
+
+  const handleChangeCheckbox = useCallback(
+    (e) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.checked })),
+    []
+  );
+
+  const handleTypeChange = useCallback(setType, [setType]);
 
   const handleAddQuestion = useCallback(() => {
-    dispatch(addQuestion(type));
-  }, [dispatch, type]);
+    updateQuestions((draft) => {
+      const maxId = draft.length > 0 ? Math.max(...draft.map((q) => q.id)) : 0;
+      draft.push({
+        id: maxId + 1,
+        type,
+        questionText: '',
+        isRequired: false,
+        options: [],
+      });
+    });
+  }, [updateQuestions, type]);
 
-  const resetSurveyForm = useCallback(() => {
-    dispatch(resetForm());
-    dispatch(resetQuestions());
-  }, [dispatch]);
+  const handleCancel = useCallback(() => navigate('/forms'), [navigate]);
 
-  const handleSaveAfter = useCallback(() => {
-    resetSurveyForm();
-    navigate('/forms');
-  }, [resetSurveyForm, navigate]);
+  const findQuestionById = (draft, qId) => draft.find(({ id }) => id === qId);
 
-  const handleCancel = useCallback(() => {
-    resetSurveyForm();
-    navigate('/forms');
-  }, [resetSurveyForm, navigate]);
+  const handleQuestionTextChange = useCallback(
+    (qId, text) => {
+      updateQuestions((draft) => {
+        const q = findQuestionById(draft, qId);
+        if (q) q.questionText = text;
+      });
+    },
+    [updateQuestions]
+  );
 
-  const generateFormData = useCallback(() => {
-    return {
-      ...form,
-      questionList: questions,
-    };
-  }, [form, questions]);
+  const handleRequiredChange = useCallback(
+    (qId, isRequired) => {
+      updateQuestions((draft) => {
+        const q = findQuestionById(draft, qId);
+        if (q) q.isRequired = isRequired;
+      });
+    },
+    [updateQuestions]
+  );
+
+  const handleRemoveQuestion = useCallback(
+    (qId) => {
+      updateQuestions((draft) => {
+        const idx = draft.findIndex((q) => q.id === qId);
+        if (idx !== -1) draft.splice(idx, 1);
+      });
+    },
+    [updateQuestions]
+  );
+
+  const handleAddOption = useCallback(
+    (qId) => {
+      updateQuestions((draft) => {
+        const q = findQuestionById(draft, qId);
+        if (q) {
+          const newId = (q.options?.length || 0) + 1;
+          q.options.push({ id: newId, text: '', optionOrder: newId });
+        }
+      });
+    },
+    [updateQuestions]
+  );
+
+  const handleOptionChange = useCallback(
+    (qId, oId, optionText) => {
+      updateQuestions((draft) => {
+        const q = findQuestionById(draft, qId);
+        if (q) {
+          const opt = q.options.find((o) => o.id === oId);
+          if (opt) opt.optionText = optionText;
+        }
+      });
+    },
+    [updateQuestions]
+  );
+
+  const handleRemoveOption = useCallback(
+    (qId, oId) => {
+      updateQuestions((draft) => {
+        const q = findQuestionById(draft, qId);
+        if (q) {
+          q.options = q.options.filter((o) => o.id !== oId);
+        }
+      });
+    },
+    [updateQuestions]
+  );
 
   const handleSaveForm = useCallback(() => {
-    const formData = generateFormData();
-    const param = {
-      param: formData,
-      callbackFn: handleSaveAfter,
-    };
-    if (isEditMode) {
-      dispatch(updateFormRequest(param));
-    } else {
-      dispatch(saveFormRequest(param));
-    }
-  }, [dispatch, handleSaveAfter, generateFormData, isEditMode]);
+    mutate({ ...form, questionList: [...questions] });
+  }, [form, questions, mutate]);
+
+  const renderedQuestions = useMemo(
+    () =>
+      questions.map((question) => (
+        <QuestionCardRenderer
+          key={question.id}
+          {...question}
+          onRemoveQuestion={() => handleRemoveQuestion(question.id)}
+          handleQuestionTextChange={(text) =>
+            handleQuestionTextChange(question.id, text)
+          }
+          handleRequiredChange={(req) => handleRequiredChange(question.id, req)}
+          handleOptionChange={(oId, text) =>
+            handleOptionChange(question.id, oId, text)
+          }
+          onAddOption={() => handleAddOption(question.id)}
+          onRemoveOption={(oId) => handleRemoveOption(question.id, oId)}
+        />
+      )),
+    [
+      questions,
+      handleRemoveQuestion,
+      handleQuestionTextChange,
+      handleRequiredChange,
+      handleOptionChange,
+      handleAddOption,
+      handleRemoveOption,
+    ]
+  );
 
   return (
     <div className='relative'>
@@ -105,30 +186,12 @@ const FormEditorContainer = () => {
         onAddQuestion={handleAddQuestion}
       />
       <div className='max-w-4xl mx-auto p-6 space-y-6'>
-        <FormMetaRenderer {...form} onChange={handleChange} />
-        {questions.length > 0 &&
-          questions.map((question) => (
-            <QuestionCardRenderer
-              key={question.id}
-              {...question}
-              onRemoveQuestion={() => dispatch(removeQuestion(question.id))}
-              handleQuestionTextChange={(questionText) =>
-                dispatch(changeQuestionText({ id: question.id, questionText }))
-              }
-              handleRequiredChange={(isRequired) =>
-                dispatch(changeRequired({ id: question.id, isRequired }))
-              }
-              handleOptionChange={(optionId, optionText) =>
-                dispatch(
-                  changeOption({ id: question.id, optionId, optionText })
-                )
-              }
-              onAddOption={() => dispatch(addOption(question.id))}
-              onRemoveOption={(optionId) =>
-                dispatch(removeOption({ id: question.id, optionId }))
-              }
-            />
-          ))}
+        <FormMetaRenderer
+          {...form}
+          onChange={handleChange}
+          onChangeCheckbox={handleChangeCheckbox}
+        />
+        {renderedQuestions}
         <div className='flex space-y-6 w-full max-w-3xl mx-auto justify-end-safe gap-2'>
           <div>
             <button
@@ -151,5 +214,4 @@ const FormEditorContainer = () => {
     </div>
   );
 };
-
-export default React.memo(FormEditorContainer);
+export default FormEditorContainer;

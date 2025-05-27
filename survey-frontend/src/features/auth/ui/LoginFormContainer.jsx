@@ -14,7 +14,7 @@ const LoginFormContainer = memo(() => {
 
   // 로그인 폼 입력 상태
   const [loginForm, setLoginForm] = useState({
-    email: '',
+    userId: '',
     password: '',
   });
 
@@ -47,7 +47,7 @@ const LoginFormContainer = memo(() => {
 
   return (
     <LoginForm
-      email={loginForm.email}
+      userId={loginForm.userId}
       password={loginForm.password}
       isLoggingIn={isPending}
       onFormChange={handleFormChange}

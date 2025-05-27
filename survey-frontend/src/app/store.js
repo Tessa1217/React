@@ -6,10 +6,8 @@ import rootSaga from '@/app/rootSaga';
 import { createLogger } from 'redux-logger';
 
 import pagingReducer from '@/shared/model/paging.slice';
-import formReducer from '@/entities/form/model/form.slice';
-import questionReducer from '@/entities/question/model/question.slice';
-import formListReducer from '@/features/formList/model/formList.slice';
 import authReducer from '@/features/auth/model/auth.slice';
+import loadingReducer from '@/shared/model/loading.slice';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -28,17 +26,15 @@ const middleware = (getDefaultMiddleware) => {
     serializableCheck: false,
   }).concat(sagaMiddleware);
   if (import.meta.env.MODE === 'development') {
-    middlewares.push(logger);
+    // middlewares.push(logger);
   }
   return middlewares;
 };
 
 const storeReducer = combineReducers({
   paging: pagingReducer,
-  form: formReducer,
-  question: questionReducer,
-  formList: formListReducer,
   auth: authReducer,
+  loading: loadingReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, storeReducer);
