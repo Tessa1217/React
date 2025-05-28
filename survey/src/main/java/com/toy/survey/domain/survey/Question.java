@@ -43,7 +43,7 @@ public class Question extends CommonSystemField {
   @Column
   private String questionText;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "question_type_id", referencedColumnName = "id", nullable = false)
   private Code questionType;
 
@@ -53,7 +53,7 @@ public class Question extends CommonSystemField {
   @Column
   private Integer questionOrder;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "option_set_id", referencedColumnName = "id")
   private OptionSet optionSet;
 
@@ -65,9 +65,10 @@ public class Question extends CommonSystemField {
     this.form = form;
   }
 
-  public void addOptions(List<OptionItem> options) {
+  public void setOptions(List<OptionItem> options) {
+    this.optionList = options;
     for (OptionItem option : options) {
-      addOption(option);
+      option.assignQuestion(this);
     }
   }
 

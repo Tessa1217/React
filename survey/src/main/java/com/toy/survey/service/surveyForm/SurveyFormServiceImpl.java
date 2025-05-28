@@ -64,7 +64,7 @@ public class SurveyFormServiceImpl implements SurveyFormService {
                                              .stream()
                                              .map(q -> {
                                                 Question question = generateNewQuestion(q);
-                                                question.addOptions(convertQuestionOptionItems(q));
+                                                question.setOptions(convertQuestionOptionItems(q));
                                                 return question;
                                               })
                                              .collect(Collectors.toList());
@@ -113,7 +113,7 @@ public class SurveyFormServiceImpl implements SurveyFormService {
         existingQuestionMap.remove(existing.getId());
       } else {      
         Question question = generateNewQuestion(req);
-        question.addOptions(convertQuestionOptionItems(req));            
+        question.setOptions(convertQuestionOptionItems(req));            
         form.addQuestion(question);                                                    
       }
     }

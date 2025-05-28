@@ -7,11 +7,13 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.toy.survey.domain.code.QCode;
 import com.toy.survey.domain.survey.Form;
 import com.toy.survey.domain.survey.OptionItem;
 import com.toy.survey.domain.survey.QForm;
 import com.toy.survey.domain.survey.QOptionItem;
 import com.toy.survey.domain.survey.QQuestion;
+import com.toy.survey.domain.user.QUser;
 import com.toy.survey.dto.surveyForm.FormRes;
 import com.toy.survey.dto.surveyForm.OptionItemRes;
 import com.toy.survey.dto.surveyForm.QuestionRes;
@@ -26,21 +28,27 @@ public class SurveyFormQueryDSLRepository {
 
   private QForm form = QForm.form;
 
+  private QUser user = QUser.user;
+
   private QQuestion question = QQuestion.question;
 
   private QOptionItem optionItem = QOptionItem.optionItem;
+
+  private QCode code = QCode.code1;
   
   @Transactional(readOnly = true)
   public FormRes findByIdWithQuestions(Long id) {
 
     Form formWithQuestions = queryFactory.selectFrom(form)
-                                         .leftJoin(form.questionList, question).fetchJoin()                                         
+                                         .leftJoin(form.user, user).fetchJoin()
+                                         .leftJoin(form.questionList, question).fetchJoin()    
+                                         .leftJoin(question.questionType, code).fetchJoin()
                                          .where(form.id.eq(id))
                                          .fetchOne();  
     
     // MultipleBagFetchException으로 인해서 분리해서 조회                                         
     if (formWithQuestions != null && !formWithQuestions.getQuestionList().isEmpty()) {
-     List<OptionItem> options = queryFactory.selectFrom(optionItem)
+     List<OptionItem> options = queryFactory.selectFrom(optionItem)                  
                   .leftJoin(optionItem.question, question).fetchJoin()
                   .where(optionItem.question.in(formWithQuestions.getQuestionList()))
                   .fetch();  // OptionItem을 별도 쿼리로 한번에 로딩
@@ -49,7 +57,7 @@ public class SurveyFormQueryDSLRepository {
           var optionsForQuestion = options.stream()
                                               .filter(option -> option.getQuestion().equals(questionEntity))
                                               .collect(Collectors.toList());
-          questionEntity.addOptions(optionsForQuestion);
+          questionEntity.setOptions(optionsForQuestion);
       });                        
     }
 

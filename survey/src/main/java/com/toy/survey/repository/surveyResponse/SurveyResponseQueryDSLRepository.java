@@ -1,5 +1,6 @@
 package com.toy.survey.repository.surveyResponse;
 
+import static com.querydsl.core.types.ExpressionUtils.as;
 import static com.querydsl.core.types.Projections.constructor;
 
 import java.util.List;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.querydsl.core.types.Expression;
-import static com.querydsl.core.types.ExpressionUtils.as;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.JPAExpressions;
