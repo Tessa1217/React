@@ -10,7 +10,6 @@ const CheckboxTaker = ({ id, options = [], selected = [], onChange }) => {
           <input
             id={`${id}-${option.id}`}
             type='checkbox'
-            disabled
             checked={selected.includes(option.id)}
             onChange={() => onChange(id, option.id)}
             className='accent-blue-600 w-4 h-4'

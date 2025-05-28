@@ -1,9 +1,9 @@
-import FormViewContainer from '@/features/formViewer/ui/FormViewContainer';
+import FormTakeContainer from '@/features/formTake/ui/FormTakeContainer';
 import { FormModeProvider } from '@/shared/contexts/FormModeContext';
 const ResponseSubmitPage = () => {
   return (
-    <FormModeProvider initialMode='view'>
-      <FormViewContainer />
+    <FormModeProvider initialMode='take'>
+      <FormTakeContainer />
     </FormModeProvider>
   );
 };

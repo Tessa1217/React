@@ -5,7 +5,6 @@ const MultipleChoiceTaker = ({ id, options = [], value, onChange }) => {
         <label key={option.id} className='flex items-center space-x-2'>
           <input
             type='radio'
-            disabled
             checked={value === option.id}
             value={option.id}
             onChange={(e) => onChange(id, e.target.value)}
