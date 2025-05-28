@@ -1,7 +1,6 @@
 import { memo } from 'react';
-// import { useNavigate } from 'react-router-dom';
+import Badge from '@/shared/ui/icon/Badge';
 const ResponseTable = memo(({ responseList, onClick }) => {
-  // const navigate = useNavigate();
   return (
     <div className='overflow-x-auto shadow-lg rounded-lg"'>
       <table className='min-w-full bg-white border border-gray-200 rounded-lg'>
@@ -32,7 +31,11 @@ const ResponseTable = memo(({ responseList, onClick }) => {
                     : '없음'}
                 </td>
                 <td className='px-6 py-4 text-center'>
-                  {form.responsed ? '완료' : '미완료'}
+                  {form.responsed ? (
+                    <Badge color='green'>응답완료</Badge>
+                  ) : (
+                    <Badge color='red'>미응답</Badge>
+                  )}
                 </td>
               </tr>
             ))

@@ -1,11 +1,10 @@
 import React, { useMemo } from 'react';
-import { useMode } from '@/shared/contexts/FormModeContext';
 import ShortAnswerViewer from '@/entities/question/ui/view/ShortAnswerViewer';
 import CheckboxViewer from '@/entities/question/ui/view/CheckboxViewer';
 import ParagraphViewer from '@/entities/question/ui/view/ParagraphViewer';
 import DropdownViewer from '@/entities/question/ui/view/DropdownViewer';
 import MultipleChoiceViewer from '@/entities/question/ui/view/MultipleChoiceViewer';
-import QuestionViewer from '@/entities/question/ui/view/QuestionViewer';
+import QuestionMeta from '@/entities/question/ui/shared/QuestionMeta';
 
 const QuestionViewCard = ({
   id,
@@ -14,27 +13,26 @@ const QuestionViewCard = ({
   type,
   options = [],
 }) => {
-  const { mode } = useMode();
   const questionType = useMemo(() => {
     switch (type) {
       case 'SHORT_ANSWER':
-        return <ShortAnswerViewer mode={mode} />;
+        return <ShortAnswerViewer />;
       case 'CHECKBOX':
-        return <CheckboxViewer mode={mode} id={id} options={options} />;
+        return <CheckboxViewer id={id} options={options} />;
       case 'MULTIPLE_CHOICE':
-        return <MultipleChoiceViewer mode={mode} id={id} options={options} />;
+        return <MultipleChoiceViewer id={id} options={options} />;
       case 'DROPDOWN':
-        return <DropdownViewer mode={mode} options={options} />;
+        return <DropdownViewer options={options} />;
       case 'PARAGRAPH':
-        return <ParagraphViewer mode={mode} />;
+        return <ParagraphViewer />;
       default:
-        return <ShortAnswerViewer mode={mode} />;
+        return <ShortAnswerViewer />;
     }
-  }, [type, mode, id, options]);
+  }, [type, id, options]);
   return (
-    <QuestionViewer questionText={questionText} isRequired={isRequired}>
+    <QuestionMeta questionText={questionText} isRequired={isRequired}>
       {questionType}
-    </QuestionViewer>
+    </QuestionMeta>
   );
 };
 
