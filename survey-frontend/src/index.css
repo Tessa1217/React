@@ -1,1 +1,20 @@
 @import 'tailwindcss';
+
+@font-face {
+  font-family: 'Freesentation-5Medium';
+  src: url('@/assets/fonts/Freesentation-5Medium.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Freesentation-9Black';
+  src: url('@/assets/fonts/Freesentation-9Black.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'Freesentation-5Medium';
+  font-size: 16px;
+}
