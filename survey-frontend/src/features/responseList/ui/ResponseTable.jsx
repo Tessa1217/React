@@ -1,24 +1,24 @@
 import { memo } from 'react';
 import Badge from '@/shared/ui/icon/Badge';
+
 const ResponseTable = memo(({ responseList, onClick }) => {
   return (
-    <div className='overflow-x-auto shadow-lg rounded-lg"'>
-      <table className='min-w-full bg-white border border-gray-200 rounded-lg'>
-        <thead className='bg-blue-500 text-white text-sm uppercase tracking-wider'>
+    <div className='overflow-x-auto shadow-lg rounded-lg'>
+      <table className='min-w-full bg-white border border-gray-200 rounded-lg border-collapse'>
+        <thead className='bg-blue-500 text-white text-md uppercase tracking-wider'>
           <tr>
-            <th className='px-6 py-3 text-ceter'>제목</th>
+            <th className='px-6 py-3 text-center'>제목</th>
             <th className='px-6 py-3 text-center'>응답 시 로그인</th>
             <th className='px-6 py-3 text-center'>만료일</th>
             <th className='px-6 py-3 text-center'>응답여부</th>
           </tr>
         </thead>
-        <tbody className='text-gray-700 text-sm divide-y divide-gray-200'>
-          {/* 이 부분은 반복 렌더링 */}
+        <tbody className='text-gray-700 text-md divide-y divide-gray-200'>
           {responseList.length > 0 ? (
             responseList.map((form) => (
               <tr
                 key={form.id}
-                className='hover:bg-gray-50'
+                className='hover:bg-gray-50 cursor-pointer'
                 onClick={() => onClick(form)}
               >
                 <td className='px-6 py-4 text-left'>{form.title}</td>

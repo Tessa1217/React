@@ -5,7 +5,7 @@ import { setPaging, setPagingNumber } from '@/shared/model/paging.slice';
 import { selectPagingByKey } from '@/shared/model/paging.selectors';
 import Pagination from '@/shared/ui/pagination/Pagination';
 import FormTable from '@/features/formList/ui/FormTable';
-import { HiCheckCircle } from 'react-icons/hi';
+import ButtonInsert from '@/shared/ui/common/ButtonInsert';
 import { fetchFormList } from '@/features/formList/model/formList.api';
 import { useAppQuery } from '@/shared/hooks/useAppQuery';
 
@@ -95,12 +95,10 @@ const FormListContainer = memo(() => {
         />
       )}
       <div className='flex space-y-6 w-full mx-auto justify-end-safe gap-2'>
-        <button
-          className='flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg transition cursor-pointer'
-          onClick={() => navigate('/forms/new')}
-        >
-          등록 <HiCheckCircle size={20} />
-        </button>
+        <ButtonInsert
+          size={20}
+          onInsertButtonClick={() => navigate('/forms/new')}
+        />
       </div>
     </div>
   );

@@ -5,8 +5,10 @@ import { fetchFormById } from '@/entities/form/model/form.api';
 import { saveFormResponse } from '@/features/formTake/model/formTake.api';
 import FormMetaRenderer from '@/entities/form/ui/FormMetaRenderer';
 import QuestionCardRenderer from '@/entities/question/ui/QuestionCardRenderer';
+import ButtonList from '@/shared/ui/common/ButtonList';
 import { useCallback, useEffect } from 'react';
 import { useImmer } from 'use-immer';
+import ButtonSave from '../../../shared/ui/common/ButtonSave';
 
 const key = 'response';
 
@@ -119,19 +121,12 @@ const FormTakeContainer = () => {
           );
         })}
       <div className='flex w-full max-w-3xl mx-auto justify-end gap-3'>
-        <button
-          className='flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-2xl shadow-md transition-colors duration-200'
-          onClick={() => saveResponse()}
-          disabled={isPending}
-        >
-          {isPending ? '등록 중...' : '등록'}
-        </button>
-        <button
-          className='flex items-center gap-1 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-2xl shadow-sm transition-colors duration-200'
-          onClick={() => handleCancel()}
-        >
-          목록
-        </button>
+        <ButtonSave
+          onSaveButtonClick={saveResponse}
+          size={20}
+          isPending={isPending}
+        />
+        <ButtonList onListButtonClick={handleCancel} size={20} />
       </div>
     </div>
   );

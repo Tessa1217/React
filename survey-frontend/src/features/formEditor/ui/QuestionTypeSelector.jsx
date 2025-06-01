@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaCirclePlus } from 'react-icons/fa6';
+
 const QuestionTypeSelector = ({ type, onChange, onAddQuestion }) => {
   const options = [
     { id: 1, name: '단답형', value: 'SHORT_ANSWER' },
@@ -10,12 +11,15 @@ const QuestionTypeSelector = ({ type, onChange, onAddQuestion }) => {
   ];
 
   return (
-    <div className='absolute right-0 top-10 bg-white dark:bg-gray-800 border rounded-lg shadow-lg p-4 w-64 z-40'>
-      <div className='flex flex-col gap-3'>
+    <div className='bg-white rounded-xl shadow p-4 space-y-4'>
+      <div className='flex flex-col space-y-3'>
+        <label className='text-sm font-medium text-gray-700'>
+          질문 유형 선택
+        </label>
         <select
           value={type}
           onChange={(e) => onChange(e.target.value)}
-          className='border px-2 py-1 rounded'
+          className='border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
         >
           {options.map((option) => (
             <option key={option.id} value={option.value}>
@@ -24,10 +28,11 @@ const QuestionTypeSelector = ({ type, onChange, onAddQuestion }) => {
           ))}
         </select>
         <button
-          className='flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded transition'
+          className='flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition cursor-pointer'
           onClick={onAddQuestion}
         >
-          <FaCirclePlus /> 질문 추가
+          <FaCirclePlus />
+          질문 추가
         </button>
       </div>
     </div>

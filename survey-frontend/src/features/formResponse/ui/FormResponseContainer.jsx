@@ -4,6 +4,7 @@ import { fetchFormResponseById } from '@/features/formResponse/model/formRespons
 import FormMetaRenderer from '@/entities/form/ui/FormMetaRenderer';
 import QuestionCardRenderer from '@/entities/question/ui/QuestionCardRenderer';
 import { useCallback, useMemo } from 'react';
+import ButtonList from '@/shared/ui/common/ButtonList';
 
 const key = 'response';
 
@@ -46,12 +47,7 @@ const FormResponseContainer = () => {
           <QuestionCardRenderer key={question.id} {...question} />
         ))}
       <div className='flex space-y-6 w-full max-w-3xl mx-auto justify-end-safe gap-2'>
-        <button
-          className='flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg transition cursor-pointer'
-          onClick={() => handleCancel()}
-        >
-          목록
-        </button>
+        <ButtonList onListButtonClick={handleCancel} size={20} />
       </div>
     </div>
   );
