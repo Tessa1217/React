@@ -33,17 +33,17 @@ const FormListContainer = memo(() => {
     [dispatch, paging]
   );
 
-  const page = paging.pageNumber;
+  const page = useMemo(() => paging.pageNumber, [paging]);
 
-  const { data: response } = useAppQuery(['form', page], () =>
-    fetchFormList({ page })
-  );
+  const queryFn = useCallback(() => fetchFormList({ page }), [page]);
+
+  const { data: response } = useAppQuery(['form', page], queryFn);
+
   const formList = response?.data?.content || [];
 
   useEffect(() => {
     if (response) {
       const { data } = response;
-      console.log(data);
       handlePagination(data);
     }
   }, [response, handlePagination]);

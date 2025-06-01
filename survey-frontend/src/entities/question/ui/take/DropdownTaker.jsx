@@ -8,7 +8,7 @@ const DropdownTaker = ({ id, options = [], value, onChange }) => {
         onChange={(e) => onChange(id, e.target.value)}
       >
         {options.map((option) => (
-          <option key={option.id} value={option.optionOrder}>
+          <option key={option.id} value={option.id}>
             {option.optionText}
           </option>
         ))}

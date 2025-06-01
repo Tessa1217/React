@@ -12,18 +12,19 @@ const QuestionTakeCard = ({
   isRequired,
   type,
   options = [],
-  answer,
+  answerText = '',
+  selectedOption,
   onAnswerTextChange,
   onSelectedOptionChange,
+  onSelectedOptionsChange,
 }) => {
-  const { answerText, selectedOption } = answer || {};
   const questionType = useMemo(() => {
     switch (type) {
       case 'SHORT_ANSWER':
         return (
           <ShortAnswerTaker
             id={id}
-            value={answerText}
+            value={answerText || ''}
             onChange={onAnswerTextChange}
           />
         );
@@ -32,8 +33,8 @@ const QuestionTakeCard = ({
           <CheckboxTaker
             id={id}
             options={options}
-            selected={selectedOption}
-            onChange={onSelectedOptionChange}
+            selected={selectedOption || []}
+            onChange={onSelectedOptionsChange}
           />
         );
       case 'MULTIPLE_CHOICE':
@@ -41,7 +42,7 @@ const QuestionTakeCard = ({
           <MultipleChoiceTaker
             id={id}
             options={options}
-            value={selectedOption}
+            value={selectedOption || []}
             onChange={onSelectedOptionChange}
           />
         );
@@ -50,7 +51,7 @@ const QuestionTakeCard = ({
           <DropdownTaker
             id={id}
             options={options}
-            value={selectedOption}
+            value={selectedOption || ''}
             onChange={onSelectedOptionChange}
           />
         );
@@ -58,12 +59,12 @@ const QuestionTakeCard = ({
         return (
           <ParagraphTaker
             id={id}
-            value={answerText}
+            value={answerText || ''}
             onChange={onAnswerTextChange}
           />
         );
       default:
-        return <ShortAnswerTaker />;
+        throw new Error('유효하지 않는 문제 옵션입니다.');
     }
   }, [
     type,
@@ -71,6 +72,7 @@ const QuestionTakeCard = ({
     answerText,
     selectedOption,
     onSelectedOptionChange,
+    onSelectedOptionsChange,
     onAnswerTextChange,
     options,
   ]);

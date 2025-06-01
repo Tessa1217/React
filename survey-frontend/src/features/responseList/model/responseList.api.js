@@ -3,6 +3,8 @@ import client from '@/shared/api/client';
 export const fetchResponseList = (requestParam) => {
   return client.get(
     '/survey/response/list',
-    requestParam && { params: { page: requestParam.page } }
+    requestParam && {
+      params: { page: requestParam?.page || 0, size: requestParam?.size || 10 },
+    }
   );
 };

@@ -1,11 +1,11 @@
-const MultipleChoiceTaker = ({ id, options = [], value, onChange }) => {
+const MultipleChoiceTaker = ({ id, options = [], onChange }) => {
   return (
     <div className='space-y-2'>
       {options.map((option) => (
         <label key={option.id} className='flex items-center space-x-2'>
           <input
             type='radio'
-            checked={value === option.id}
+            name={`radio_${id}`}
             value={option.id}
             onChange={(e) => onChange(id, e.target.value)}
           />

@@ -5,6 +5,7 @@ const DropdownViewer = ({ id, options = [], value }) => {
       <select
         id={id}
         className='mt-2 w-full px-3 py-2 border border-gray-300 rounded'
+        disabled
         value={value}
       >
         {options.map((option) => (

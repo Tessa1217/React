@@ -45,7 +45,13 @@ const ResponseListContainer = memo(() => {
   });
 
   const handleResponseBtnClick = useCallback(
-    (id) => navigate(`/responses/${id}`),
+    ({ responseId, id }) => {
+      if (responseId) {
+        navigate(`/responses/${responseId}`);
+      } else {
+        navigate(`/responses/take/${id}`);
+      }
+    },
     [navigate]
   );
 

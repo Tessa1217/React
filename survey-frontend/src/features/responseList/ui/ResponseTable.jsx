@@ -19,7 +19,7 @@ const ResponseTable = memo(({ responseList, onClick }) => {
               <tr
                 key={form.id}
                 className='hover:bg-gray-50'
-                onClick={() => onClick(form.id)}
+                onClick={() => onClick(form)}
               >
                 <td className='px-6 py-4 text-left'>{form.title}</td>
                 <td className='px-6 py-4 text-center'>
@@ -31,7 +31,7 @@ const ResponseTable = memo(({ responseList, onClick }) => {
                     : '없음'}
                 </td>
                 <td className='px-6 py-4 text-center'>
-                  {form.responsed ? (
+                  {form.responseId ? (
                     <Badge color='green'>응답완료</Badge>
                   ) : (
                     <Badge color='red'>미응답</Badge>

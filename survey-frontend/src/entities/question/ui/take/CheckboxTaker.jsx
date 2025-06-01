@@ -11,7 +11,7 @@ const CheckboxTaker = ({ id, options = [], selected = [], onChange }) => {
             id={`${id}-${option.id}`}
             type='checkbox'
             checked={selected.includes(option.id)}
-            onChange={() => onChange(id, option.id)}
+            onChange={(e) => onChange(id, option.id, e.target.checked)}
             className='accent-blue-600 w-4 h-4'
           />
           <span className='text-gray-800'>{option.optionText}</span>

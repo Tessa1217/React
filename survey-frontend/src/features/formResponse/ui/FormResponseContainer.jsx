@@ -3,7 +3,7 @@ import { useAppQuery } from '@/shared/hooks/useAppQuery';
 import { fetchFormResponseById } from '@/features/formResponse/model/formResponse.api';
 import FormMetaRenderer from '@/entities/form/ui/FormMetaRenderer';
 import QuestionCardRenderer from '@/entities/question/ui/QuestionCardRenderer';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 const key = 'response';
 
@@ -16,30 +16,34 @@ const FormResponseContainer = () => {
     { enabled: !!formId }
   );
 
-  const { questions, ...form } = response?.data || {};
+  const { form, answers } = response?.data || {};
+
+  const { questions } = form || [];
+
+  const questionsWithAnswer = useMemo(() => {
+    if (!questions && !answers) {
+      return null;
+    }
+    questions.map((q) => {
+      const answer = answers.find((a) => q.id == a.questionId);
+      if (answer) {
+        q.answer = answer;
+      }
+      return q;
+    });
+
+    return questions;
+  }, [questions, answers]);
 
   const handleCancel = useCallback(() => navigate('/responses'), [navigate]);
-
-  const handleAnswerChange = useCallback((e) => {
-    console.log(e.target.value);
-  }, []);
-
-  const handleOptionChange = useCallback((e) => {
-    console.log(e.target.value);
-  }, []);
 
   return (
     <div className='max-w-4xl mx-auto p-6 space-y-6'>
       <FormMetaRenderer {...form} />
-      {questions &&
-        questions.length > 0 &&
-        questions.map((question) => (
-          <QuestionCardRenderer
-            key={question.id}
-            {...question}
-            handleAnswerChange={handleAnswerChange}
-            handleOptionChange={handleOptionChange}
-          />
+      {questionsWithAnswer &&
+        questionsWithAnswer.length > 0 &&
+        questionsWithAnswer.map((question) => (
+          <QuestionCardRenderer key={question.id} {...question} />
         ))}
       <div className='flex space-y-6 w-full max-w-3xl mx-auto justify-end-safe gap-2'>
         <button

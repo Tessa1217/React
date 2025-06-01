@@ -29,7 +29,6 @@ export const useAppMutation = (mutationFn, options = { isLoading: true }) => {
         title: '요청 실패',
         description: error?.message || '오류가 발생했습니다.',
       });
-      console.log('hii');
     },
     onSettled: (...args) => {
       if (options.isLoading) {
