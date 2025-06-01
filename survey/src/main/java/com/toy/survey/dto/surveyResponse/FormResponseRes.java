@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class ResponseFormRes {
+public class FormResponseRes {
 
   private Long id;
 
@@ -23,6 +23,6 @@ public class ResponseFormRes {
 
   private LocalDateTime expiresAt;
 
-  private Boolean responsed;
+  private Long responseId;
   
 }

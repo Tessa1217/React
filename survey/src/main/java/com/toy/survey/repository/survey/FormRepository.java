@@ -1,4 +1,4 @@
-package com.toy.survey.repository.surveyForm;
+package com.toy.survey.repository.survey;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.toy.survey.domain.survey.Form;
 
-public interface SurveyFormRepository extends JpaRepository<Form, Long> {
+public interface FormRepository extends JpaRepository<Form, Long> {
 
-  Page<Form> findAllByOrderByCreatedAtDesc(Pageable pageable);
+  Page<Form> findAllByUserIdOrderByCreatedAtDesc(Long userId, Pageable pageable);
   
 }

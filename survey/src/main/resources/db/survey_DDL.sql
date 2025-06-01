@@ -13,6 +13,29 @@ CREATE TABLE users (
 
 ALTER TABLE users COMMENT = '사용자';
 
+-- 롤 테이블
+CREATE TABLE roles (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '권한 ID',
+    name VARCHAR(50) NOT NULL UNIQUE COMMENT '권한명 (예: ROLE_USER, ROLE_ADMIN)',
+    description VARCHAR(100) COMMENT '권한 설명'
+);
+
+ALTER TABLE roles COMMENT = '권한';
+
+INSERT INTO roles (name, description) VALUES ('ROLE_USER', '일반 사용자');
+INSERT INTO roles (name, description) VALUES ('ROLE_ADMIN', '관리자');
+
+-- 사용자-롤 관계 테이블
+CREATE TABLE user_roles (
+    user_id BIGINT NOT NULL COMMENT '사용자 ID',
+    role_id BIGINT NOT NULL COMMENT '권한 ID',
+    PRIMARY KEY (user_id, role_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
+);
+
+ALTER TABLE user_roles COMMENT = '사용자 권한 매핑';
+
 -- 코드 그룹 테이블
 CREATE TABLE code_group (
     id BIGINT AUTO_INCREMENT PRIMARY KEY comment '코드 그룹 ID',

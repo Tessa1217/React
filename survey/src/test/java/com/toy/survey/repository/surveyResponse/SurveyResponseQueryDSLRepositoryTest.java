@@ -11,7 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import com.toy.survey.dto.surveyResponse.ResponseFormRes;
+import com.toy.survey.domain.survey.FormResponse;
+import com.toy.survey.dto.surveyResponse.FormResponseRes;
 
 @SpringBootTest
 public class SurveyResponseQueryDSLRepositoryTest {
@@ -30,16 +31,21 @@ public class SurveyResponseQueryDSLRepositoryTest {
   void findAllWithResponsed_shouldReturnFormsWithResponseStatus() {
       PageRequest pageable = PageRequest.of(0, 10);
 
-      Page<ResponseFormRes> page = surveyResponseQueryDSLRepository.findAllWithResponsed(pageable, userId);
+      Page<FormResponseRes> page = surveyResponseQueryDSLRepository.findAllWithResponsed(pageable, userId);
 
-      List<ResponseFormRes> content = page.getContent();
+      List<FormResponseRes> content = page.getContent();
 
       // 현재 데이터 있음
       assertThat(content).isNotEmpty();
-
-      // 현재 응시한 사람 없음
-      assertThat(content.get(0).getResponsed()).isFalse();
   }  
+
+  @Test
+  void findByIdWithAnswers_shouldReturnWithJoins() {
+
+    Long id = 5L;
+    FormResponse response = surveyResponseQueryDSLRepository.findByIdWithAnswers(id, userId);
+
+  }
 
   
 }

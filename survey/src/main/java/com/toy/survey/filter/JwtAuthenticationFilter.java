@@ -1,7 +1,6 @@
 package com.toy.survey.filter;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,6 +9,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.toy.survey.config.CustomUserPrincipal;
+import com.toy.survey.service.user.CustomUserDetailService;
 import com.toy.survey.util.JwtUtil;
 
 import jakarta.servlet.FilterChain;
@@ -21,8 +21,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private final JwtUtil jwtUtil;
 
-  public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+  private final CustomUserDetailService customUserDetailService;
+
+  public JwtAuthenticationFilter(JwtUtil jwtUtil, CustomUserDetailService customUserDetailService) {
     this.jwtUtil = jwtUtil;
+    this.customUserDetailService = customUserDetailService;
   }
 
   @Override
@@ -32,19 +35,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     throws ServletException, IOException {
       String token = jwtUtil.resolveAccessToken(request);
       if (StringUtils.hasText(token) && jwtUtil.validateToken(token)) {
-        Long id = jwtUtil.getId(token);
+
         String userId = jwtUtil.getUserId(token);
 
-        CustomUserPrincipal principal = CustomUserPrincipal
-                                           .builder()
-                                           .id(id)
-                                           .userId(userId)
-                                           .build();
+        CustomUserPrincipal principal = customUserDetailService.loadUserByUsername(userId);
 
-        UsernamePasswordAuthenticationToken auth = 
-          new UsernamePasswordAuthenticationToken(principal, null, List.of());
-          
-        SecurityContextHolder.getContext().setAuthentication(auth);
+        UsernamePasswordAuthenticationToken authentication =
+            new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
       }
 
       filterChain.doFilter(request, response);

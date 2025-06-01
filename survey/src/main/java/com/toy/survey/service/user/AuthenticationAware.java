@@ -19,12 +19,14 @@ public class AuthenticationAware implements AuditorAware<String> {
                 .map(SecurityContext::getAuthentication)
                 .filter(Authentication::isAuthenticated)
                 .map(Authentication::getPrincipal)
-                .map(principal -> {
-                    if (principal instanceof CustomUserPrincipal) {
-                      return ((CustomUserPrincipal) principal).getUserId(); 
-                    } 
-                    return null;
-                });                
+            .map(principal -> {
+                if (principal instanceof CustomUserPrincipal customUser) {
+                    return customUser.getUserId();
+                } else if (principal instanceof String s && !"anonymousUser".equals(s)) {
+                    return s; // JWT 인증 등에서 문자열 principal일 수도 있음
+                }
+                return "SYSTEM"; // fallback
+            });             
   }
   
 }

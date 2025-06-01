@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.toy.survey.config.CurrentUser;
+import com.toy.survey.config.CustomUserPrincipal;
 import com.toy.survey.dto.surveyForm.FormReq;
 import com.toy.survey.service.surveyForm.SurveyFormService;
 
@@ -38,7 +40,7 @@ public class SurveyFormController {
    *
    * @param id 설문지 ID
    * @return ResponseEntity<?> 설문지 상세조회 정보가 담긴 응답 객체 반환
-   */  
+   */    
   @GetMapping("/{id}")
   public ResponseEntity<?> getSurvey(@PathVariable Long id) {
     return ResponseEntity.ok().body(surveyFormService.getSurveyForm(id));
@@ -49,7 +51,7 @@ public class SurveyFormController {
    *
    * @param formRequest 등록할 설문지 정보가 담긴 폼 요청
    * @return ResponseEntity<?> 응답 객체
-   */  
+   */    
   @PostMapping("/ins")
   public ResponseEntity<?> insSurvey(@RequestBody FormReq formRequest) {
     surveyFormService.saveSurvey(formRequest);
@@ -61,7 +63,7 @@ public class SurveyFormController {
    *
    * @param formRequest 등록할 설문지 정보가 담긴 폼 요청
    * @return ResponseEntity<?> 응답 객체
-   */  
+   */   
   @PostMapping("/upd")
   public ResponseEntity<?> updSurvey(@RequestBody FormReq formRequest) {
     surveyFormService.updateSurvey(formRequest);

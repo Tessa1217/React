@@ -8,11 +8,13 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.toy.survey.config.ReadOnlySafeAuditingEntityListener;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners(ReadOnlySafeAuditingEntityListener.class)
 @MappedSuperclass
 public class CommonSystemField {
 
@@ -25,7 +27,7 @@ public class CommonSystemField {
   private LocalDateTime createdAt;
 
   @Column(name = "updated_by")
-  @LastModifiedBy
+  @LastModifiedBy()
   private String updatedBy;
 
   @Column(name = "updated_at")

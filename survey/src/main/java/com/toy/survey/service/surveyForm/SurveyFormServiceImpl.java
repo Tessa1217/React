@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,43 +18,91 @@ import com.toy.survey.domain.user.User;
 import com.toy.survey.dto.surveyForm.FormReq;
 import com.toy.survey.dto.surveyForm.FormRes;
 import com.toy.survey.dto.surveyForm.OptionItemReq;
+import com.toy.survey.dto.surveyForm.OptionItemRes;
 import com.toy.survey.dto.surveyForm.QuestionReq;
+import com.toy.survey.dto.surveyForm.QuestionRes;
+import com.toy.survey.exception.ForbiddenException;
+import com.toy.survey.exception.NotFoundException;
+import com.toy.survey.exception.UnauthorizedException;
 import com.toy.survey.repository.code.CodeRepository;
+import com.toy.survey.repository.survey.FormRepository;
+import com.toy.survey.repository.survey.OptionItemRepository;
+import com.toy.survey.repository.survey.QuestionRepository;
 import com.toy.survey.repository.surveyForm.SurveyFormQueryDSLRepository;
-import com.toy.survey.repository.surveyForm.SurveyFormRepository;
 import com.toy.survey.repository.user.UserRepository;
+import com.toy.survey.service.user.UserService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class SurveyFormServiceImpl implements SurveyFormService {
+
+  private final UserService userService;
   
-  private final SurveyFormRepository surveyFormRepository;
+  private final FormRepository formRepository;
 
   private final SurveyFormQueryDSLRepository surveyFormQueryDSLRepository;
 
   private final UserRepository userRepository;
 
   private final CodeRepository codeRepository;
+
+  private final QuestionRepository questionRepository;
+
+  private final OptionItemRepository optionItemRepository;
   
   @Override
   public Page<FormRes> getSurveyFormList(Pageable pageable) {
-    Page<Form> formPage = surveyFormRepository.findAllByOrderByCreatedAtDesc(pageable);    
+    Long userId = userService.getCurrentUserId().orElse(null);
+    if (userId == null) {
+      return Page.empty();
+    }
+    Page<Form> formPage = formRepository.findAllByUserIdOrderByCreatedAtDesc(userId, pageable);    
     return formPage.map(FormRes::fromEntity);
   }
 
   @Override
   public FormRes getSurveyForm(Long id) {
-    return surveyFormQueryDSLRepository
-                       .findByIdWithQuestions(id);
+
+    Long userId = userService.getCurrentUserId()
+                             .orElseThrow(() -> new UnauthorizedException("로그인한 사용자만 접근 가능합니다."));
+
+    Form formWithQuestions = surveyFormQueryDSLRepository
+                                    .findByIdWithQuestions(id)
+                                    .orElseThrow(() -> new NotFoundException("유효하지 않은 설문입니다"));
+
+    if (!userId.equals(formWithQuestions.getUser().getId())) {
+      throw new ForbiddenException("작성자가 아니면 조회할 수 없습니다.");
+    }                                    
+
+    FormRes formRes = FormRes.fromEntity(formWithQuestions);
+
+    formRes.addQuestionRes(
+      formWithQuestions.getQuestionList().stream().map(q -> {
+        QuestionRes qr = QuestionRes.fromEntity(q);
+        if (q.getOptionList() != null && !q.getOptionList().isEmpty()) {
+          qr.addOptions(
+            q.getOptionList().stream().map(o -> OptionItemRes.fromEntity(o)).collect(Collectors.toList())
+          );          
+        }
+        return qr;
+      }).collect(Collectors.toList())
+    );
+    
+    return formRes;
+
   }  
 
   @Override
   @Transactional
   public void saveSurvey(FormReq formRequest) {
 
-    User user = userRepository.findByEmail("yj.kwon@fusionsoft.co.kr").orElseThrow(() -> new UsernameNotFoundException("이메일 없습니다."));
+    Long userId = userService.getCurrentUserId()
+                             .orElseThrow(() -> new UnauthorizedException("로그인한 사용자만 접근 가능합니다."));    
+
+    User user = userRepository.findById(userId)
+                              .orElseThrow(() -> new NotFoundException("유효한 사용자가 아닙니다."));
 
     Form form = formRequest.toEntity();
     form.setUser(user);
@@ -74,7 +121,7 @@ public class SurveyFormServiceImpl implements SurveyFormService {
       questionList != null ? questionList
                            : List.of());                
     
-    surveyFormRepository.save(form);
+    formRepository.save(form);
 
   }
 
@@ -98,7 +145,15 @@ public class SurveyFormServiceImpl implements SurveyFormService {
   @Transactional
   public void updateSurvey(FormReq formRequest) {
 
-    Form form = surveyFormRepository.findById(formRequest.getId()).orElseThrow(() -> new IllegalArgumentException("해당 설문지가 존재하지 않습니다."));
+    Long userId = userService.getCurrentUserId()
+                             .orElseThrow(() -> new UnauthorizedException("로그인한 사용자만 접근 가능합니다."));                                         
+
+    Form form = formRepository.findById(formRequest.getId())
+                              .orElseThrow(() -> new NotFoundException("해당 설문지가 존재하지 않습니다."));
+
+    if (!userId.equals(form.getUser().getId())) {
+      throw new ForbiddenException("작성자만 설문을 수정할 수 있습니다.");
+    }
 
     form.update(formRequest);
 
@@ -119,6 +174,8 @@ public class SurveyFormServiceImpl implements SurveyFormService {
     }
 
     form.getQuestionList().removeAll(existingQuestionMap.values());
+
+    questionRepository.deleteAll(existingQuestionMap.values());
 
   }
 
@@ -143,6 +200,9 @@ public class SurveyFormServiceImpl implements SurveyFormService {
     }
 
     question.getOptionList().removeAll(existingMap.values());
+
+    optionItemRepository.deleteAll(existingMap.values());
+    
 
   }
 

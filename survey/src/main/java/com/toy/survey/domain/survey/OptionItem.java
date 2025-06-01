@@ -48,4 +48,15 @@ public class OptionItem extends CommonSystemField {
     this.optionOrder = req.getOptionOrder();    
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof OptionItem)) {
+      return false;
+    }
+    return id != null && id.equals(((OptionItem) o).getId());
+  }  
+
 }

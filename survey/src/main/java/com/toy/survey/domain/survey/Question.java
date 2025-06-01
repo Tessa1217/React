@@ -58,7 +58,7 @@ public class Question extends CommonSystemField {
   private OptionSet optionSet;
 
   @Builder.Default
-  @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<OptionItem> optionList = new ArrayList<>();
 
   public void assignForm(Form form) {
@@ -85,6 +85,17 @@ public class Question extends CommonSystemField {
     this.questionText = req.getQuestionText();
     this.isRequired = req.getIsRequired();
     this.questionOrder = req.getQuestionOrder();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Question)) {
+      return false;
+    }
+    return id != null && id.equals(((Question) o).getId());
   }
 
 }

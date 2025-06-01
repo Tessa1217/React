@@ -1,6 +1,7 @@
 package com.toy.survey.repository.surveyForm;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
@@ -14,9 +15,6 @@ import com.toy.survey.domain.survey.QForm;
 import com.toy.survey.domain.survey.QOptionItem;
 import com.toy.survey.domain.survey.QQuestion;
 import com.toy.survey.domain.user.QUser;
-import com.toy.survey.dto.surveyForm.FormRes;
-import com.toy.survey.dto.surveyForm.OptionItemRes;
-import com.toy.survey.dto.surveyForm.QuestionRes;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,19 +33,26 @@ public class SurveyFormQueryDSLRepository {
   private QOptionItem optionItem = QOptionItem.optionItem;
 
   private QCode code = QCode.code1;
-  
+    
   @Transactional(readOnly = true)
-  public FormRes findByIdWithQuestions(Long id) {
+  public Optional<Form> findByIdWithQuestions(Long id) {
 
-    Form formWithQuestions = queryFactory.selectFrom(form)
-                                         .leftJoin(form.user, user).fetchJoin()
-                                         .leftJoin(form.questionList, question).fetchJoin()    
-                                         .leftJoin(question.questionType, code).fetchJoin()
-                                         .where(form.id.eq(id))
-                                         .fetchOne();  
+    Optional<Form> optionalFormWithQuestions = Optional.ofNullable(
+                                                   queryFactory.selectFrom(form)
+                                                               .leftJoin(form.user, user).fetchJoin()
+                                                               .leftJoin(form.questionList, question).fetchJoin()    
+                                                               .leftJoin(question.questionType, code).fetchJoin()
+                                                               .where(form.id.eq(id))
+                                                               .fetchOne());  
+
+    if (optionalFormWithQuestions.isEmpty()) {
+      return Optional.empty();
+    } 
+    
+    Form formWithQuestions = optionalFormWithQuestions.get();
     
     // MultipleBagFetchException으로 인해서 분리해서 조회                                         
-    if (formWithQuestions != null && !formWithQuestions.getQuestionList().isEmpty()) {
+    if (!formWithQuestions.getQuestionList().isEmpty()) {
      List<OptionItem> options = queryFactory.selectFrom(optionItem)                  
                   .leftJoin(optionItem.question, question).fetchJoin()
                   .where(optionItem.question.in(formWithQuestions.getQuestionList()))
@@ -59,23 +64,9 @@ public class SurveyFormQueryDSLRepository {
                                               .collect(Collectors.toList());
           questionEntity.setOptions(optionsForQuestion);
       });                        
-    }
+    }    
 
-    FormRes formRes = FormRes.fromEntity(formWithQuestions);
-
-    formRes.addQuestionRes(
-      formWithQuestions.getQuestionList().stream().map(q -> {
-        QuestionRes qr = QuestionRes.fromEntity(q);
-        if (q.getOptionList() != null && !q.getOptionList().isEmpty()) {
-          qr.addOptions(
-            q.getOptionList().stream().map(o -> OptionItemRes.fromEntity(o)).collect(Collectors.toList())
-          );          
-        }
-        return qr;
-      }).collect(Collectors.toList())
-    );
-    
-    return formRes;
+    return Optional.of(formWithQuestions);
 
   }
   

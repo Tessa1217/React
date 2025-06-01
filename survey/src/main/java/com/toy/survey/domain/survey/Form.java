@@ -38,7 +38,7 @@ public class Form extends CommonSystemField {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   private User user;
 
@@ -59,7 +59,7 @@ public class Form extends CommonSystemField {
   private LocalDateTime expiresAt;
 
   @Builder.Default
-  @OneToMany(mappedBy = "form", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "form", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<Question> questionList = new ArrayList<>();
 
   public void addQuestions(List<Question> questions) {
@@ -73,6 +73,13 @@ public class Form extends CommonSystemField {
     questionList.add(question);    
   }
 
+  public void setQuestions(List<Question> questions) {
+    this.questionList = questions;
+    for (Question question : questions) {
+      question.assignForm(this);
+    }
+  }
+
   public void setUser(User user) {
     this.user = user;
   }
@@ -84,5 +91,16 @@ public class Form extends CommonSystemField {
     this.isPublic = req.getIsPublic();
     this.requiresLogin = req.getRequiresLogin();    
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Form)) {
+      return false;
+    }
+    return id != null && id.equals(((Form) o).getId());
+  }    
   
 }

@@ -16,9 +16,18 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "form_response")
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FormResponse extends CommonSystemField {
   
   @Id
@@ -29,7 +38,7 @@ public class FormResponse extends CommonSystemField {
   @JoinColumn(name = "form_id", referencedColumnName = "id", nullable = false)
   private Form form;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
   private User user;
 
@@ -38,4 +47,9 @@ public class FormResponse extends CommonSystemField {
 
   @OneToMany(mappedBy = "response", fetch = FetchType.LAZY)
   private List<FormAnswer> formAnswers;
+
+  public void addFormAnswer(FormAnswer formAnswer) {
+    this.formAnswers.add(formAnswer);
+    formAnswer.assignFormResponse(this);
+  }
 }
