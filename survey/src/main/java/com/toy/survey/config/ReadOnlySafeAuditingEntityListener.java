@@ -6,6 +6,16 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 public class ReadOnlySafeAuditingEntityListener extends AuditingEntityListener {
 
   @Override
+  public void touchForCreate(Object target) {
+    boolean isReadOnly = TransactionSynchronizationManager.isCurrentTransactionReadOnly();
+    if (isReadOnly) {
+      // 읽기 전용 트랜잭션이면 업데이트 무시
+      return;
+    }    
+    super.touchForCreate(target);    
+  }
+
+  @Override
   public void touchForUpdate(Object target) {
     boolean isReadOnly = TransactionSynchronizationManager.isCurrentTransactionReadOnly();
     if (isReadOnly) {
