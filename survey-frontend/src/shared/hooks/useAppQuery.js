@@ -15,7 +15,6 @@ export const useAppQuery = (key, queryFn, options = {}) => {
     retry: false,
     retryOnMount: false,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
     ...options,
   };
 

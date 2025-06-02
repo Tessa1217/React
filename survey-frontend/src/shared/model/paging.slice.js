@@ -7,13 +7,17 @@ const pagingSlice = createSlice({
   initialState,
   reducers: {
     setPaging: (state, { payload }) => {
-      console.log(payload);
       const { key, paging } = payload;
       state[key] = { ...state[key], ...paging };
     },
     setPagingNumber: (state, { payload }) => {
       const { key, page } = payload;
-      state[key].pageNumber = page;
+      state[key].currentPage = page;
+    },
+    setSearchParams: (state, { payload }) => {
+      const { key, search } = payload;
+      if (!state[key]) state[key] = {};
+      state[key].search = search;
     },
     resetPaging: (state, { payload: key }) => {
       delete state[key];
@@ -21,5 +25,6 @@ const pagingSlice = createSlice({
   },
 });
 
-export const { setPaging, setPagingNumber, resetPaging } = pagingSlice.actions;
+export const { setPaging, setPagingNumber, resetPaging, setSearchParams } =
+  pagingSlice.actions;
 export default pagingSlice.reducer;

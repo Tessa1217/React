@@ -41,14 +41,14 @@ const FormEditorContainer = () => {
     },
   });
 
-  useEffect(() => {
-    return () => {
-      queryClient.removeQueries({
-        queryKey: ['formEdit', formId],
-        exact: true,
-      });
-    };
-  }, [formId, queryClient]);
+  // useEffect(() => {
+  //   return () => {
+  //     queryClient.invalidateQueries({
+  //       queryKey: 'formEdit',
+  //       exact: true,
+  //     });
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (formId && response?.data) {

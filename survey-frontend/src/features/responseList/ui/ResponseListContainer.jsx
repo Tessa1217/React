@@ -3,8 +3,13 @@ import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Pagination from '@/shared/ui/pagination/Pagination';
 import ResponseTable from '@/features/responseList/ui/ResponseTable';
+import ResponseListSearchBar from '@/features/responseList/ui/ResponseListSearchBar';
 import { useAppQuery } from '@/shared/hooks/useAppQuery';
-import { setPaging, setPagingNumber } from '@/shared/model/paging.slice';
+import {
+  setPaging,
+  setPagingNumber,
+  setSearchParams,
+} from '@/shared/model/paging.slice';
 import { selectPagingByKey } from '@/shared/model/paging.selectors';
 import { fetchResponseList } from '@/features/responseList/model/responseList.api';
 
@@ -12,37 +17,45 @@ const key = 'responseList';
 
 const ResponseListContainer = memo(() => {
   const paging = useSelector(selectPagingByKey(key), shallowEqual);
-  const page = paging.pageNumber;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: response } = useAppQuery([key, page], () =>
-    fetchResponseList({ page })
-  );
-  const responseList = response?.data?.content || [];
+
+  const { currentPage, search: searchCondition } = useMemo(() => {
+    const { currentPage, search } = paging;
+    return { currentPage, search };
+  }, [paging]);
+
+  const queryFn = useCallback(async () => {
+    const { data } = await fetchResponseList({
+      currentPage,
+      search: searchCondition,
+    });
+    return data;
+  }, [currentPage, searchCondition]);
+
+  const { data } = useAppQuery([key, currentPage, searchCondition], queryFn);
+
+  const { items: responseList = [], search, ...pageInfo } = data || {};
 
   const handlePagination = useCallback(
-    ({ pageable, totalElements, totalPages, numberOfElements }) => {
-      const next = {
-        ...pageable,
-        totalElements,
-        totalPages,
-        numberOfElements,
-      };
-
-      if (JSON.stringify(paging) !== JSON.stringify(next)) {
-        dispatch(setPaging({ key, paging: next }));
-      }
+    (paging) => {
+      dispatch(setPaging({ key, paging }));
     },
-    [dispatch, paging]
+    [dispatch]
   );
 
   useEffect(() => {
-    if (response) {
-      const { data } = response;
-      handlePagination(data);
+    if (pageInfo) {
+      handlePagination(pageInfo);
     }
-  });
+  }, [handlePagination, pageInfo]);
+
+  useEffect(() => {
+    if (search) {
+      dispatch(setSearchParams({ key, search }));
+    }
+  }, [dispatch, search]);
 
   const handleResponseBtnClick = useCallback(
     ({ responseId, id }) => {
@@ -62,25 +75,28 @@ const ResponseListContainer = memo(() => {
     [dispatch]
   );
 
-  const shouldShowPagination = useMemo(
-    () => paging && paging.totalElements > 0,
-    [paging]
+  const handleSearchChange = useCallback(
+    (newSearch) => dispatch(setSearchParams({ key, search: newSearch })),
+    [dispatch]
   );
 
   return (
     <div className='mx-auto p-6 space-y-6'>
+      <ResponseListSearchBar
+        searchKeyword={searchCondition?.searchKeyword}
+        hasResponded={searchCondition?.hasResponded}
+        onSearchChange={handleSearchChange}
+      />
       <ResponseTable
         responseList={responseList}
         onClick={handleResponseBtnClick}
       />
-      {shouldShowPagination && (
-        <Pagination
-          totalCount={paging?.totalElements}
-          currentPage={paging?.pageNumber}
-          limit={paging?.pageSize}
-          onPageChange={handlePageChange}
-        />
-      )}
+      <Pagination
+        totalCount={paging?.totalItems}
+        currentPage={paging?.currentPage}
+        limit={paging?.limit}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 });
