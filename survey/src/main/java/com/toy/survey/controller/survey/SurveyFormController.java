@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.toy.survey.config.CurrentUser;
-import com.toy.survey.config.CustomUserPrincipal;
 import com.toy.survey.dto.surveyForm.FormReq;
+import com.toy.survey.dto.surveyForm.FormSearchReq;
 import com.toy.survey.service.surveyForm.SurveyFormService;
 
 import lombok.RequiredArgsConstructor;
@@ -31,8 +30,9 @@ public class SurveyFormController {
    * @return ResponseEntity<?> 설문지 목록 정보가 담긴 응답 객체 반환
    */
   @GetMapping("/list")
-  public ResponseEntity<?> getSurveyList(@PageableDefault(page = 0, size = 10) Pageable pageable) {    
-    return ResponseEntity.ok().body(surveyFormService.getSurveyFormList(pageable));
+  public ResponseEntity<?> getSurveyList(@PageableDefault(page = 0, size = 10) Pageable pageable,
+                                         FormSearchReq searchReq) {                                          
+    return ResponseEntity.ok().body(surveyFormService.getSurveyFormList(pageable, searchReq));
   }
 
   /**

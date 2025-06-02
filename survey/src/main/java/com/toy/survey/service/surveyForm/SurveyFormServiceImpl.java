@@ -15,8 +15,10 @@ import com.toy.survey.domain.survey.Form;
 import com.toy.survey.domain.survey.OptionItem;
 import com.toy.survey.domain.survey.Question;
 import com.toy.survey.domain.user.User;
+import com.toy.survey.dto.common.PageRes;
 import com.toy.survey.dto.surveyForm.FormReq;
 import com.toy.survey.dto.surveyForm.FormRes;
+import com.toy.survey.dto.surveyForm.FormSearchReq;
 import com.toy.survey.dto.surveyForm.OptionItemReq;
 import com.toy.survey.dto.surveyForm.OptionItemRes;
 import com.toy.survey.dto.surveyForm.QuestionReq;
@@ -53,13 +55,14 @@ public class SurveyFormServiceImpl implements SurveyFormService {
   private final OptionItemRepository optionItemRepository;
   
   @Override
-  public Page<FormRes> getSurveyFormList(Pageable pageable) {
+  public PageRes<FormRes> getSurveyFormList(Pageable pageable, FormSearchReq searchReq) {
     Long userId = userService.getCurrentUserId().orElse(null);
     if (userId == null) {
-      return Page.empty();
+      return PageRes.fromPage(Page.empty());
     }
-    Page<Form> formPage = formRepository.findAllByUserIdOrderByCreatedAtDesc(userId, pageable);    
-    return formPage.map(FormRes::fromEntity);
+    Page<Form> formPage = surveyFormQueryDSLRepository.findAllWithSearchCondition(pageable, userId, searchReq);    
+    
+    return PageRes.fromPage(formPage.map(FormRes::fromEntity), searchReq);
   }
 
   @Override

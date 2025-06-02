@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 
 import com.toy.survey.domain.survey.FormResponse;
 import com.toy.survey.dto.surveyResponse.FormResponseRes;
+import com.toy.survey.dto.surveyResponse.FormResponseSearchReq;
 
 @SpringBootTest
 public class SurveyResponseQueryDSLRepositoryTest {
@@ -31,7 +32,9 @@ public class SurveyResponseQueryDSLRepositoryTest {
   void findAllWithResponsed_shouldReturnFormsWithResponseStatus() {
       PageRequest pageable = PageRequest.of(0, 10);
 
-      Page<FormResponseRes> page = surveyResponseQueryDSLRepository.findAllWithResponsed(pageable, userId);
+      FormResponseSearchReq searchReq = FormResponseSearchReq.builder().build();
+
+      Page<FormResponseRes> page = surveyResponseQueryDSLRepository.findAllWithResponsed(pageable, userId, searchReq);
 
       List<FormResponseRes> content = page.getContent();
 

@@ -18,6 +18,7 @@ import com.toy.survey.domain.survey.FormResponse;
 import com.toy.survey.domain.survey.OptionItem;
 import com.toy.survey.domain.survey.Question;
 import com.toy.survey.domain.user.User;
+import com.toy.survey.dto.common.PageRes;
 import com.toy.survey.dto.surveyForm.FormRes;
 import com.toy.survey.dto.surveyForm.OptionItemRes;
 import com.toy.survey.dto.surveyForm.QuestionRes;
@@ -26,6 +27,7 @@ import com.toy.survey.dto.surveyResponse.FormAnswerRes;
 import com.toy.survey.dto.surveyResponse.FormResponseDetailRes;
 import com.toy.survey.dto.surveyResponse.FormResponseReq;
 import com.toy.survey.dto.surveyResponse.FormResponseRes;
+import com.toy.survey.dto.surveyResponse.FormResponseSearchReq;
 import com.toy.survey.enums.QuestionType;
 import com.toy.survey.enums.QuestionTypeGroup;
 import com.toy.survey.exception.NotFoundException;
@@ -64,13 +66,16 @@ public class SurveyResponseServiceImpl implements SurveyResponseService {
    * 현재 로그인한 사용자가 응답한 설문조사 목록을 페이지네이션과 함께 조회
    *
    * @param pageable 페이지 정보 (사이즈, 페이지 번호 등)
+   * @param searchReq 검색 요청 정보 (설문 제목, 응답 여부)
    * @param principal 현재 로그인한 사용자 정보
    * @return Page 객체에 담긴 FormResponseRes 리스트
    */  
   @Override
-  public Page<FormResponseRes> getSurveyResponseList(Pageable pageable) {    
+  public PageRes<FormResponseRes> getSurveyResponseList(Pageable pageable, 
+                                                        FormResponseSearchReq searchReq) {    
     Long userId = userService.getCurrentUserId().orElse(null);
-    return surveyResponseQueryDSLRepository.findAllWithResponsed(pageable, userId);  
+    Page<FormResponseRes> formResponse = surveyResponseQueryDSLRepository.findAllWithResponsed(pageable, userId, searchReq);
+    return PageRes.fromPage(formResponse);
   }
 
   /**

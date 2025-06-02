@@ -29,6 +29,7 @@ import com.toy.survey.domain.survey.QQuestion;
 import com.toy.survey.domain.survey.Question;
 import com.toy.survey.domain.user.QUser;
 import com.toy.survey.dto.surveyResponse.FormResponseRes;
+import com.toy.survey.dto.surveyResponse.FormResponseSearchReq;
 
 import lombok.RequiredArgsConstructor;
 
@@ -53,8 +54,24 @@ public class SurveyResponseQueryDSLRepository {
   private QOptionItem optionItem = QOptionItem.optionItem;
   
   @Transactional(readOnly = true)
-  public Page<FormResponseRes> findAllWithResponsed(Pageable pageable, Long userId) {
-                                                  
+  public Page<FormResponseRes> findAllWithResponsed(Pageable pageable, 
+                                                    Long userId, 
+                                                    FormResponseSearchReq searchReq) {
+
+    long total = queryFactory
+        .select(form.count())
+        .from(form)
+        .where(
+          eqIsPublic(userId),
+          titleLike(searchReq),
+          hasRespondedEq(searchReq, userId)
+        )           
+        .fetchOne();
+        
+    if (total == 0) {
+      return Page.empty();
+    }                                                     
+                                                   
     List<FormResponseRes> responseList = queryFactory
                                            .select(constructor(FormResponseRes.class,
                                               form.id,
@@ -66,18 +83,43 @@ public class SurveyResponseQueryDSLRepository {
                                               as(fetchFormResponseId(userId), "responseId")                                                                       
                                             ))
                                           .from(form)        
-                                          .where(eqIsPublic(userId))                                  
+                                          .where(
+                                            eqIsPublic(userId),
+                                            titleLike(searchReq),
+                                            hasRespondedEq(searchReq, userId)
+                                          )                                  
                                           .offset(pageable.getOffset())
                                           .limit(pageable.getPageSize())
                                           .orderBy(form.createdAt.desc())
                                           .fetch();
 
-    long total = queryFactory
-        .select(form.count())
-        .from(form)
-        .fetchOne();
-
     return new PageImpl<>(responseList, pageable, total);       
+
+  }
+
+  private BooleanExpression titleLike(FormResponseSearchReq searchReq) {
+    String searchKeyword = searchReq == null  ? 
+                               null : searchReq.getSearchKeyword();
+    return (searchKeyword == null || searchKeyword.isBlank()) 
+             ? null 
+             : form.title.like("%" + searchKeyword + "%");                               
+  }
+
+  private BooleanExpression hasRespondedEq(FormResponseSearchReq searchReq, Long userId) {
+    Boolean hasResponded = searchReq == null ? 
+                             null : searchReq.getHasResponded();
+    if (hasResponded == null || userId == null) {
+      return null;
+    }                             
+    BooleanExpression existExpr =  JPAExpressions.selectOne()
+                                        .from(formResponse)
+                                        .where(
+                                        formResponse.form.id.eq(form.id),
+                                        formResponse.user.id.eq(userId)
+                                        )
+                                        .exists();
+
+    return hasResponded ? existExpr : existExpr.not();                                        
 
   }
 
