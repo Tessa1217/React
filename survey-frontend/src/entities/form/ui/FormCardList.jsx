@@ -8,7 +8,7 @@ const FormCardList = memo(
           <h2 className='text-2xl font-bold text-gray-800'>{cardTitle}</h2>
           <button
             onClick={onMoreBtnClick}
-            className='text-indigo-600 hover:text-indigo-800 text-sm font-semibold transition'
+            className='text-indigo-600 hover:text-indigo-800 text-sm font-semibold transition cursor-pointer'
           >
             더보기 →
           </button>

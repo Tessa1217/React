@@ -22,13 +22,6 @@ const FormListContainer = memo(() => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handlePagination = useCallback(
-    (paging) => {
-      dispatch(setPaging({ key, paging }));
-    },
-    [dispatch]
-  );
-
   const { currentPage, search: searchCondition } = useMemo(() => {
     const { currentPage, search } = paging;
     return { currentPage, search };
@@ -39,18 +32,19 @@ const FormListContainer = memo(() => {
       currentPage,
       search: searchCondition,
     });
-    return data;
+    const { items: formList, search, ...pageInfo } = data;
+    return [formList, search, pageInfo];
   }, [currentPage, searchCondition]);
 
   const { data } = useAppQuery(['form', currentPage, searchCondition], queryFn);
 
-  const { items: formList = [], search, ...pageInfo } = data || {};
+  const [formList = [], search, pageInfo] = data || [];
 
   useEffect(() => {
     if (pageInfo) {
-      handlePagination(pageInfo);
+      dispatch(setPaging({ key, pageInfo }));
     }
-  }, [pageInfo, handlePagination]);
+  }, [dispatch, pageInfo]);
 
   useEffect(() => {
     if (search) {

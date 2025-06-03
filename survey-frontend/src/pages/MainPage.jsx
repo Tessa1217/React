@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { currentlyLoggedIn } from '@/features/auth/model/auth.selector';
@@ -10,21 +10,34 @@ const MainPage = memo(() => {
   const loggedIn = useSelector(currentlyLoggedIn);
   const navigate = useNavigate();
 
+  const fetchFormQueryFn = useCallback(async () => {
+    const { data } = await fetchFormList({ currentPage: 0, limit: 6 });
+    const { items } = data;
+    return items;
+  }, []);
+
+  const fetchResponseQueryFn = useCallback(async () => {
+    const { data } = await fetchResponseList({ currentPage: 0, limit: 6 });
+    const { items } = data;
+    return items;
+  }, []);
+
   const { data: formListResponse } = useAppQuery(
     ['mainFormList'],
-    () => fetchFormList({ page: 0, size: 6 }),
+    fetchFormQueryFn,
     {
       enabled: !!loggedIn,
     }
   );
 
-  const { data: responseListResponse } = useAppQuery(['mainResponseList'], () =>
-    fetchResponseList({ page: 0, size: 6 })
+  const { data: responseListResponse } = useAppQuery(
+    ['mainResponseList'],
+    fetchResponseQueryFn
   );
 
-  const formList = formListResponse?.data?.content || [];
+  const formList = formListResponse || [];
 
-  const responseList = responseListResponse?.data?.content || [];
+  const responseList = responseListResponse || [];
 
   return (
     <main className='max-w-7xl mx-auto px-4 sm:px-8 py-10 bg-gradient-to-b from-indigo-50 via-white to-white min-h-screen'>
