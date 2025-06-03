@@ -18,6 +18,7 @@ React와 Spring Boot 3 (Java 17)를 기반으로 개발한 설문조사 클론 �
 ## 🗂️ 기술 스택
 
 ### 🔧 Backend
+
 - Java 17
 - Spring Boot 3.x
 - Spring Data JPA
@@ -26,6 +27,7 @@ React와 Spring Boot 3 (Java 17)를 기반으로 개발한 설문조사 클론 �
 - JWT Authentication
 
 ### 🎨 Frontend
+
 - React
 - Tailwind CSS
 - React Hook Form
@@ -41,6 +43,8 @@ React와 Spring Boot 3 (Java 17)를 기반으로 개발한 설문조사 클론 �
 > 자세한 테이블 구조는 DDL 참고
 
 - **users**: 사용자 정보 (이메일, 비밀번호, 이름 등)
+- **user_roles**: 사용자-롤 관계
+- **roles**: 사용자 롤 테이블 (롤 이름 - 관리자, 일반 사용자)
 - **code_group / code**: 공통 코드 관리 (질문 유형 등)
 - **form**: 설문지 정보 (제목, 설명, 공개 여부 등)
 - **question**: 설문 질문 (유형, 옵션, 필수 여부 등)
@@ -54,10 +58,9 @@ React와 Spring Boot 3 (Java 17)를 기반으로 개발한 설문조사 클론 �
 ## 💡 주요 기능
 
 - 회원가입 / 로그인 / JWT 인증
+- 로그인 사용자와 비로그인 사용자별 메인 화면
 - 설문지 생성 및 수정
 - 질문 유형 (객관식, 단답형, 체크박스 등) 추가
-- 공통 옵션 집합 재사용 가능
-- 질문 간 조건 분기 (분기 로직)
 - 설문 응답 저장
 - 응답 결과 조회
 
@@ -66,18 +69,25 @@ React와 Spring Boot 3 (Java 17)를 기반으로 개발한 설문조사 클론 �
 ## 🖼️ 화면 예시
 
 - [x] 로그인/회원가입 페이지
+- [x] 메인화면
 - [x] 설문지 생성/수정 UI
 - [x] 질문 카드 렌더링 (QuestionCardRenderer)
 - [x] 모달 팝업 (예: 이메일 중복 확인)
 - [x] 응답 제출 완료 화면
 
 ---
+
 ## ⚙️ 향후 개선 과제
+
 - 관리자 페이지 (코드 그룹 관리 등)
+- 공통 옵션 집합 재사용 가능
+- 질문 간 조건 분기 (분기 로직)
 - 설문 통계 기능 (차트 등)
 - 리팩토링 및 테스트 코드 보완
 - 다국어 지원 (i18n)
+
 ---
+
 ## 📁 프론트엔드 디렉터리 구조
 
 <details>
@@ -129,25 +139,27 @@ React와 Spring Boot 3 (Java 17)를 기반으로 개발한 설문조사 클론 �
 
 ### 🧩 폴더 설명 요약
 
-- `app/`: 앱 진입점 (store, saga 등)
+- `app/`: 앱 진입점 (AppRouter, store 등)
 - `entities/`: 도메인 중심 모듈화 (form, question 등)
-- `features/`: 기능 단위 UI (폼 편집기 등)
+- `features/`: 기능 단위 UI (폼 편집기, 설문 결과 조회 등)
 - `pages/`: 라우팅 단위 페이지
 - `shared/`: 공통 훅, 유틸, 컴포넌트
 - `widgets/`: 공통 레이아웃 컴포넌트 (Header, Footer 등)
 
 ---
+
 ## 🚀 실행 방법
 
 ### 백엔드
+
 ```bash
 cd survey
 ./gradlew bootRun
 ```
 
 ### 프론트엔드
+
 ```bash
 cd survey-frontend
 npm run dev
 ```
-
