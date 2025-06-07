@@ -14,6 +14,7 @@ import com.toy.survey.dto.surveyForm.FormReq;
 import com.toy.survey.dto.surveyForm.FormSearchReq;
 import com.toy.survey.service.surveyForm.SurveyFormService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequestMapping("/survey/form")
@@ -53,7 +54,7 @@ public class SurveyFormController {
    * @return ResponseEntity<?> 응답 객체
    */    
   @PostMapping("/ins")
-  public ResponseEntity<?> insSurvey(@RequestBody FormReq formRequest) {
+  public ResponseEntity<?> insSurvey(@Valid @RequestBody FormReq formRequest) {
     surveyFormService.saveSurvey(formRequest);
     return ResponseEntity.ok().build();
   }
@@ -65,7 +66,7 @@ public class SurveyFormController {
    * @return ResponseEntity<?> 응답 객체
    */   
   @PostMapping("/upd")
-  public ResponseEntity<?> updSurvey(@RequestBody FormReq formRequest) {
+  public ResponseEntity<?> updSurvey(@Valid @RequestBody FormReq formRequest) {
     surveyFormService.updateSurvey(formRequest);
     return ResponseEntity.ok().build();
   }

@@ -13,6 +13,7 @@ import com.toy.survey.dto.user.LoginUserReq;
 import com.toy.survey.dto.user.SignUpUserReq;
 import com.toy.survey.service.user.UserService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequestMapping("/user")
@@ -23,7 +24,7 @@ public class UserController {
   private final UserService userService;
   
   @PostMapping("/login")
-  public ResponseEntity<String> login(@RequestBody LoginUserReq loginUser) throws InterruptedException {    
+  public ResponseEntity<String> login(@RequestBody @Valid LoginUserReq loginUser) throws InterruptedException {    
     String token = userService.login(loginUser);
     return ResponseEntity.ok().body(token);
   }
@@ -39,7 +40,7 @@ public class UserController {
   }  
 
   @PostMapping("/signUp")
-  public ResponseEntity<Boolean> signUp(@RequestBody @Validated SignUpUserReq signUpUser) {
+  public ResponseEntity<Boolean> signUp(@RequestBody @Valid SignUpUserReq signUpUser) {
     userService.signUp(signUpUser);
     return ResponseEntity.ok().body(true);
   }

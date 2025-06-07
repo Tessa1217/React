@@ -2,6 +2,7 @@ package com.toy.survey.dto.surveyForm;
 
 import com.toy.survey.domain.survey.OptionItem;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,6 +17,7 @@ public class OptionItemReq {
 
   private Long id;
   
+  @NotBlank(message = "옵션 내용은 필수값입니다.")
   private String optionText;
 
   private Integer optionOrder;

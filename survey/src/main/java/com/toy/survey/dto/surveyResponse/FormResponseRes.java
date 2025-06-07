@@ -1,6 +1,6 @@
 package com.toy.survey.dto.surveyResponse;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +21,7 @@ public class FormResponseRes {
 
   private Boolean requiresLogin;
 
-  private LocalDateTime expiresAt;
+  private LocalDate expiresAt;
 
   private Long responseId;
   

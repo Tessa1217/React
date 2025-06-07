@@ -38,6 +38,19 @@ public class SurveyResponseController {
 
   /**
    * 참여 설문 상세 조회
+   * - 참여할 설문에 대한 상세 조회
+   *
+   * @param pageable 페이지 정보 (사이즈, 페이지 번호 등)
+   * @param searchReq 검색 요청 정보 (설문 제목, 응답 여부)   
+   * @return ResponseEntity 응답 객체
+   */    
+  @GetMapping("/take/{id}")
+  public ResponseEntity<?> getSurveyTakeForm(@PathVariable Long id) {
+    return ResponseEntity.ok().body(surveyResponseService.getSurveyTakeForm(id));
+  }  
+
+  /**
+   * 참여 설문 상세 조회
    * - 참여한 설문에 대하여 상세 조회
    *
    * @param pageable 페이지 정보 (사이즈, 페이지 번호 등)

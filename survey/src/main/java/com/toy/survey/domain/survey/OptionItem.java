@@ -1,10 +1,13 @@
 package com.toy.survey.domain.survey;
 
+import java.util.Objects;
+
 import com.toy.survey.domain.common.CommonSystemField;
 import com.toy.survey.dto.surveyForm.OptionItemReq;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -29,7 +32,7 @@ public class OptionItem extends CommonSystemField {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "question_id", referencedColumnName = "id", nullable = false)
   private Question question;
 
@@ -44,8 +47,18 @@ public class OptionItem extends CommonSystemField {
   }
 
   public void update(OptionItemReq req) {
+    if (isSameAs(req)) {
+      return;
+    }
     this.optionText = req.getOptionText();
     this.optionOrder = req.getOptionOrder();    
+  }
+
+  public boolean isSameAs(OptionItemReq req) {
+    return (
+      Objects.equals(this.optionText, req.getOptionText()) &&
+      Objects.equals(this.optionOrder, req.getOptionOrder())
+    );
   }
 
   @Override
@@ -58,5 +71,10 @@ public class OptionItem extends CommonSystemField {
     }
     return id != null && id.equals(((OptionItem) o).getId());
   }  
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 
 }

@@ -48,6 +48,9 @@ public class FormResponse extends CommonSystemField {
   @OneToMany(mappedBy = "response", fetch = FetchType.LAZY)
   private List<FormAnswer> formAnswers;
 
+  @Column(name = "anonymous_id", length = 36)
+  private String anonymousId;
+
   public void addFormAnswer(FormAnswer formAnswer) {
     this.formAnswers.add(formAnswer);
     formAnswer.assignFormResponse(this);

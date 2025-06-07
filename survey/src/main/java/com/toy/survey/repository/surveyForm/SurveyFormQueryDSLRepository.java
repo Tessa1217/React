@@ -1,8 +1,10 @@
 package com.toy.survey.repository.surveyForm;
 
+import static com.querydsl.core.types.ExpressionUtils.as;
+import static com.querydsl.core.types.Projections.constructor;
+
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -11,16 +13,16 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.toy.survey.domain.code.QCode;
 import com.toy.survey.domain.survey.Form;
-import com.toy.survey.domain.survey.OptionItem;
 import com.toy.survey.domain.survey.QForm;
-import com.toy.survey.domain.survey.QOptionItem;
+import com.toy.survey.domain.survey.QFormResponse;
 import com.toy.survey.domain.survey.QQuestion;
-import com.toy.survey.domain.survey.Question;
 import com.toy.survey.domain.user.QUser;
+import com.toy.survey.dto.surveyForm.FormRes;
 import com.toy.survey.dto.surveyForm.FormSearchReq;
 
 import lombok.RequiredArgsConstructor;
@@ -37,21 +39,31 @@ public class SurveyFormQueryDSLRepository {
 
   private static final QQuestion question = QQuestion.question;
 
-  private static final QOptionItem optionItem = QOptionItem.optionItem;
-
   private static final QCode code = QCode.code1;
 
+  private static final QFormResponse formResponse = QFormResponse.formResponse;
+
   @Transactional(readOnly = true)
-  public Page<Form> findAllWithSearchCondition(Pageable pageable, 
+  public Page<FormRes> findAllWithSearchCondition(Pageable pageable, 
                                                Long userId, 
                                                FormSearchReq searchReq) {
 
-    JPAQuery<Form> baseQuery = queryFactory.selectFrom(form)     
-                                     .where( 
-                                        form.user.id.eq(userId),
-                                        isPublicEq(searchReq),
-                                        titleLike(searchReq)
-                                     );                                                    
+    JPAQuery<FormRes> baseQuery = queryFactory
+        .select(constructor(FormRes.class,
+            form.id,
+            form.title,
+            form.description,
+            form.isPublic,
+            form.requiresLogin,
+            form.expiresAt,            
+            as(hasResponse(), "hasResponse")
+        ))
+        .from(form)
+        .where(
+            form.user.id.eq(userId),            
+            isPublicEq(searchReq),
+            titleLike(searchReq)
+        );                                                
 
     long total = baseQuery.clone().select(form.count()).fetchOne();
 
@@ -59,13 +71,22 @@ public class SurveyFormQueryDSLRepository {
       return Page.empty(pageable);
     }
 
-    List<Form> forms = baseQuery.offset(pageable.getOffset())
+    List<FormRes> forms = baseQuery.offset(pageable.getOffset())
                                 .limit(pageable.getPageSize())
                                 .orderBy(form.createdAt.desc())
                                 .fetch();
 
     return new PageImpl<>(forms, pageable, total);
     
+  }
+
+  private BooleanExpression hasResponse() {
+    return JPAExpressions.selectOne()
+                         .from(formResponse)
+                         .where(
+                          formResponse.form.id.eq(form.id)
+                         )
+                         .exists();                         
   }
 
   private BooleanExpression titleLike(FormSearchReq searchReq) {
@@ -100,23 +121,12 @@ public class SurveyFormQueryDSLRepository {
       return Optional.empty();
     }
     
-    // MultipleBagFetchException으로 인해서 분리해서 조회 
+    // MultipleBagFetchException으로 인해서 분리해서 초기화
+    // Batch Size 활용
     
-    List<Question> questions = formWithQuestions.getQuestionList();
-     
-    if (!questions.isEmpty()) {
-     List<OptionItem> options = queryFactory.selectFrom(optionItem)                  
-                  .leftJoin(optionItem.question, question).fetchJoin()
-                  .where(optionItem.question.in(questions))
-                  .fetch();  // OptionItem을 별도 쿼리로 한번에 로딩
-
-      questions.forEach(q -> {
-        List<OptionItem> matched = options.stream()
-                                          .filter(opt -> opt.getQuestion().equals(q))
-                                          .collect(Collectors.toList());
-          q.setOptions(matched);
-      });                        
-    }    
+    formWithQuestions.getQuestionList().forEach(q -> {
+      q.getOptionList().size(); // 초기화 트리거 (Batch Fetch)
+    });    
 
     return Optional.of(formWithQuestions);
 

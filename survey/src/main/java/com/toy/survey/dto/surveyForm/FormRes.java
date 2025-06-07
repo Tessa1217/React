@@ -1,6 +1,6 @@
 package com.toy.survey.dto.surveyForm;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import com.toy.survey.domain.survey.Form;
@@ -24,11 +24,25 @@ public class FormRes {
 
   private Boolean requiresLogin;
 
-  private LocalDateTime expiresAt;
+  private LocalDate expiresAt;
+
+  private Boolean hasResponse;
 
   private Long userId;
 
   private List<QuestionRes> questions;
+
+  public FormRes (Long id, String title, String description,
+                  Boolean isPublic, Boolean requiresLogin,
+                  LocalDate expiresAt, Boolean hasResponse) {
+    this.id = id;
+    this.title = title;
+    this.description = description;
+    this.isPublic = isPublic;
+    this.requiresLogin = requiresLogin;
+    this.expiresAt = expiresAt;
+    this.hasResponse = hasResponse;                    
+  }
 
   public static FormRes fromEntity(Form form) {
     
@@ -38,7 +52,7 @@ public class FormRes {
                   .description(form.getDescription())
                   .isPublic(form.getIsPublic())
                   .requiresLogin(form.getRequiresLogin())
-                  .expiresAt(form.getExpiresAt())
+                  .expiresAt(form.getExpiresAt())                  
                   .userId(form.getUser() != null ? form.getUser().getId() : null)                  
                   .build();                                           
   }

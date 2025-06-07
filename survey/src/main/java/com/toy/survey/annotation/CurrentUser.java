@@ -1,4 +1,4 @@
-package com.toy.survey.config;
+package com.toy.survey.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

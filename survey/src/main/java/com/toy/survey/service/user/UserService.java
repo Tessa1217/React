@@ -16,5 +16,7 @@ public interface UserService {
   void signUp(SignUpUserReq req);
 
   Optional<Long> getCurrentUserId();
+
+  Optional<String> getAnonymousId();
   
 }

@@ -1,5 +1,6 @@
 package com.toy.survey.domain.survey;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +57,7 @@ public class Form extends CommonSystemField {
   private Boolean requiresLogin;
 
   @Column
-  private LocalDateTime expiresAt;
+  private LocalDate expiresAt;
 
   @Builder.Default
   @OneToMany(mappedBy = "form", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

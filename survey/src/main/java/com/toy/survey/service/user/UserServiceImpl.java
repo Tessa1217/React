@@ -2,6 +2,7 @@ package com.toy.survey.service.user;
 
 import java.util.Optional;
 
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -119,5 +120,19 @@ public class UserServiceImpl implements UserService {
     }
     return Optional.empty();
   }
-  
+
+  @Override
+  public Optional<String> getAnonymousId() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+    if (authentication == null || !authentication.isAuthenticated()) {
+      return Optional.empty();
+    }
+
+    if (authentication instanceof AnonymousAuthenticationToken) {
+      return Optional.ofNullable(authentication.getPrincipal().toString());
+    }
+    return Optional.empty();
+  }
+
 }

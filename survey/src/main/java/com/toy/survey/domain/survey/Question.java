@@ -2,6 +2,9 @@ package com.toy.survey.domain.survey;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import org.hibernate.annotations.BatchSize;
 
 import com.toy.survey.domain.code.Code;
 import com.toy.survey.domain.common.CommonSystemField;
@@ -58,33 +61,47 @@ public class Question extends CommonSystemField {
   private OptionSet optionSet;
 
   @Builder.Default
-  @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+  @BatchSize(size = 100)
   private List<OptionItem> optionList = new ArrayList<>();
 
   public void assignForm(Form form) {
     this.form = form;
   }
 
-  public void setOptions(List<OptionItem> options) {
-    this.optionList = options;
+  public void setOptions(List<OptionItem> options) {  
+    // this.optionList = options;    
+    if (options == null || options.isEmpty()) {
+      this.optionList = new ArrayList<>();
+      return;
+    }
     for (OptionItem option : options) {
-      option.assignQuestion(this);
+      this.addOption(option);      
     }
   }
 
-  public void setQuestionTypeCode(Code code) {
+  public void setQuestionTypeCode(Code code) {    
     this.questionType = code;
   }
 
-  public void addOption(OptionItem optionItem) {
+  public void addOption(OptionItem optionItem) {    
     optionItem.assignQuestion(this);
     optionList.add(optionItem);    
   }
 
   public void update(QuestionReq req) {
+    if (isSameAs(req)) {      
+      return;
+    }    
     this.questionText = req.getQuestionText();
     this.isRequired = req.getIsRequired();
     this.questionOrder = req.getQuestionOrder();
+  }
+
+  public boolean isSameAs(QuestionReq req) {
+  return Objects.equals(this.questionText, req.getQuestionText())
+      && Objects.equals(this.isRequired, req.getIsRequired())
+      && Objects.equals(this.questionOrder, req.getQuestionOrder());
   }
 
   @Override
@@ -96,6 +113,11 @@ public class Question extends CommonSystemField {
       return false;
     }
     return id != null && id.equals(((Question) o).getId());
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
   }
 
 }
