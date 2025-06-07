@@ -35,6 +35,18 @@ const MainPage = memo(() => {
     fetchResponseQueryFn
   );
 
+  const handleResponseCardClick = useCallback(
+    (id, responseId) => {
+      console.log(responseId);
+      if (responseId) {
+        navigate(`/responses/${responseId}`);
+      } else {
+        navigate(`/responses/take/${id}`);
+      }
+    },
+    [navigate]
+  );
+
   const formList = formListResponse || [];
 
   const responseList = responseListResponse || [];
@@ -47,7 +59,7 @@ const MainPage = memo(() => {
         </h1>
         {loggedIn && (
           <button
-            onClick={() => navigate('/survey/create')}
+            onClick={() => navigate('/forms/new')}
             className='mt-6 sm:mt-0 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-300 text-white rounded-xl shadow-lg transition font-medium text-base cursor-pointer'
           >
             ✏️ 새 설문 만들기
@@ -83,7 +95,7 @@ const MainPage = memo(() => {
         cardTitle='🗳️ 설문 응시하기'
         formList={responseList}
         onMoreBtnClick={() => navigate('/responses')}
-        onCardClick={(id) => navigate(`/responses/${id}`)}
+        onCardClick={handleResponseCardClick}
         isLoggedIn={loggedIn}
       />
     </main>

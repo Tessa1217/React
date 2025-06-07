@@ -1,4 +1,4 @@
-import FormTakeContainer from '@/features/formTake/ui/FormTakeContainer';
+import FormTakeContainer from '@/features/formTake/container/FormTakeContainer';
 import { FormModeProvider } from '@/shared/contexts/FormModeContext';
 const ResponseSubmitPage = () => {
   return (

@@ -1,4 +1,4 @@
-import FormResponseContainer from '@/features/formResponse/ui/FormResponseContainer';
+import FormResponseContainer from '@/features/formResponse/container/FormResponseContainer';
 import { FormModeProvider } from '@/shared/contexts/FormModeContext';
 const ResponseDetailPage = () => {
   return (

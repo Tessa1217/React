@@ -9,26 +9,22 @@ const duplicateEmailErrorMsg = '중복된 이메일이 존재합니다.';
 const dupliacteUserIdErrorMsg = '이미 사용된 아이디입니다.';
 
 const SignUpForm = ({
-  userId,
-  email,
-  password,
-  name,
-  passwordCheck,
-  passwordCheckMatched,
-  isCheckingUserId,
-  userIdChecked,
-  userIdDuplicate,
-  isCheckingEmail,
-  emailChecked,
-  emailDuplicate,
-  onChange,
+  register,
+  onSubmit,
   onUserIdChange,
   onEmailChange,
   onPasswordCheckChange,
   onDuplicateEmailCheck,
   onDuplicateUserIdCheck,
-  onSubmit,
+  isCheckingEmail,
+  isCheckingUserId,
   isSigningUp,
+  passwordCheck,
+  passwordCheckMatched,
+  userIdChecked,
+  userIdDuplicate,
+  emailChecked,
+  emailDuplicate,
 }) => {
   // 중복 체크 여부
   const duplicateEmailChecked = useMemo(
@@ -59,10 +55,9 @@ const SignUpForm = ({
             <input
               type='userId'
               name='userId'
-              value={userId}
+              {...register('userId')}
               onChange={onUserIdChange}
               className='mt-1 block w-80 px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500'
-              required
             />
             <button
               className={`w-30 text-white px-4 py-2 rounded-lg transition cursor-pointer ${
@@ -70,7 +65,7 @@ const SignUpForm = ({
                   ? 'bg-gray-400'
                   : 'bg-blue-600 hover:bg-blue-700'
               }`}
-              onClick={(e) => onDuplicateUserIdCheck(e)}
+              onClick={onDuplicateUserIdCheck}
               disabled={isCheckingUserId || duplicateUserIdChecked}
             >
               {duplicateUserIdChecked ? '확인완료' : '중복확인'}
@@ -93,10 +88,9 @@ const SignUpForm = ({
             <input
               type='email'
               name='email'
-              value={email}
+              {...register('email')}
               onChange={onEmailChange}
               className='mt-1 block w-80 px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500'
-              required
             />
             <button
               className={`w-30 text-white px-4 py-2 rounded-lg transition cursor-pointer ${
@@ -104,7 +98,7 @@ const SignUpForm = ({
                   ? 'bg-gray-400'
                   : 'bg-blue-600 hover:bg-blue-700'
               }`}
-              onClick={(e) => onDuplicateEmailCheck(e)}
+              onClick={onDuplicateEmailCheck}
               disabled={isCheckingEmail || duplicateEmailChecked}
             >
               {duplicateEmailChecked ? '확인완료' : '중복확인'}
@@ -127,8 +121,7 @@ const SignUpForm = ({
           <input
             type='password'
             name='password'
-            value={password}
-            onChange={onChange}
+            {...register('password')}
             className='mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500'
             required
           />
@@ -157,8 +150,7 @@ const SignUpForm = ({
           <input
             type='text'
             name='name'
-            value={name}
-            onChange={onChange}
+            {...register('name')}
             className='mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500'
             required
           />

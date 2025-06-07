@@ -1,18 +1,12 @@
 import { memo } from 'react';
 import { useMode } from '@/shared/contexts/FormModeContext';
-import EditableQuestionCard from '@/entities/question/ui/edit/EditableQuestionCard';
-import QuestionTakeCard from '@/entities/question/ui/take/QuestionTakeCard.jsx';
-import QuestionCard from '@/entities/question/ui/view/QuestionCard';
+import { MODE_QUESTION_COMPONENT_MAP } from '@/entities/question/ui/questionComponentMap';
 
 const QuestionCardRenderer = memo((props) => {
   const { mode } = useMode();
-  if (mode === 'edit') {
-    return <EditableQuestionCard {...props} />;
-  } else if (mode === 'take') {
-    return <QuestionTakeCard {...props} />;
-  } else {
-    return <QuestionCard {...props} />;
-  }
+  const Component =
+    MODE_QUESTION_COMPONENT_MAP[mode] || MODE_QUESTION_COMPONENT_MAP['view'];
+  return <Component {...props} />;
 });
 
 export default QuestionCardRenderer;

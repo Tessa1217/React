@@ -29,7 +29,7 @@ const QuestionTypeSelector = ({ type, onChange, onAddQuestion }) => {
         </select>
         <button
           className='flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition cursor-pointer'
-          onClick={onAddQuestion}
+          onClick={() => onAddQuestion(type)}
         >
           <FaCirclePlus />
           질문 추가

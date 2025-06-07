@@ -1,14 +1,12 @@
 import { memo } from 'react';
 import { useMode } from '@/shared/contexts/FormModeContext';
-import FormMetaEditor from '@/entities/form/ui/edit/FormMetaEditor';
-import FormMetaView from '@/entities/form/ui/view/FormMetaView';
+import { MODE_FORM_COMPONENT_MAP } from '@/entities/form/ui/formComponentMap';
 
 const FormMetaRenderer = memo((props) => {
   const { mode } = useMode();
-  if (mode === 'edit') {
-    return <FormMetaEditor {...props} />;
-  }
-  return <FormMetaView {...props} />;
+  const Component =
+    MODE_FORM_COMPONENT_MAP[mode] || MODE_FORM_COMPONENT_MAP['view'];
+  return <Component {...props} />;
 });
 
 export default FormMetaRenderer;

@@ -13,19 +13,28 @@ const FormCardList = memo(
             더보기 →
           </button>
         </header>
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
-          {formList.map((form) => (
-            <FormCard
-              key={form.id}
-              id={form.id}
-              title={form.title}
-              description={form.description}
-              expiresAt={form.expiresAt}
-              isLoggedIn={isLoggedIn}
-              onCardClick={onCardClick}
-            />
-          ))}
-        </div>
+
+        {formList.length > 0 ? (
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
+            {formList.map((form) => (
+              <FormCard
+                key={form.id}
+                id={form.id}
+                responseId={form?.responseId}
+                title={form.title}
+                description={form.description}
+                expiresAt={form.expiresAt}
+                isLoggedIn={isLoggedIn}
+                onCardClick={onCardClick}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className='flex items-center justify-center py-12 text-gray-500'>
+            <span className='text-2xl mb-2'>📭</span>
+            <p className='text-lg'>조회되는 설문지가 없습니다.</p>
+          </div>
+        )}
       </section>
     );
   }

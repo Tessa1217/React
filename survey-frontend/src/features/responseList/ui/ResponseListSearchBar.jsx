@@ -28,14 +28,14 @@ const ResponseListSearchBar = memo(
     return (
       <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6'>
         <form
-          onSubmit={(e) => handleSubmit(e)}
+          onSubmit={handleSubmit}
           className='flex items-center w-full sm:max-w-md px-4 py-2 bg-white border border-gray-300 rounded-full shadow-sm hover:shadow-md transition'
         >
           <input
             type='text'
             value={localKeyword}
             onChange={(e) => setLocalKeyword(e.target.value)}
-            onKeyDown={(e) => handleKeyDown(e)}
+            onKeyDown={handleKeyDown}
             placeholder='설문 제목을 검색하세요...'
             className='flex-grow px-3 py-2 text-sm text-gray-700 bg-transparent focus:outline-none'
           />

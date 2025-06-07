@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, memo } from 'react';
+import { createContext, useContext, useState, memo, useCallback } from 'react';
 
 const ModalContext = createContext(null);
 
@@ -12,12 +12,12 @@ export const useModalContext = () => {
 
 export const ModalProvider = memo(({ children }) => {
   const [modals, setModals] = useState([]);
-  const addModal = (newModal) => {
+  const addModal = useCallback((newModal) => {
     setModals((prevModals) => [...prevModals, newModal]);
-  };
-  const removeModal = (closeId) => {
+  }, []);
+  const removeModal = useCallback((closeId) => {
     setModals((prevModals) => prevModals.filter(({ id }) => id !== closeId));
-  };
+  }, []);
 
   return (
     <ModalContext.Provider value={{ modals, addModal, removeModal }}>

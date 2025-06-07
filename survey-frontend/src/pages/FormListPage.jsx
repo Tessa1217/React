@@ -1,4 +1,4 @@
-import FormListContainer from '@/features/formList/ui/FormListContainer';
+import FormListContainer from '@/features/formList/container/FormListContainer';
 const FormListPage = () => {
   return <FormListContainer />;
 };

@@ -2,7 +2,15 @@ import { memo } from 'react';
 import { HiUser, HiCalendar } from 'react-icons/hi';
 import clsx from 'clsx';
 const FormCard = memo(
-  ({ id, title, description, expiresAt, isLoggedIn, onCardClick }) => {
+  ({
+    id,
+    title,
+    responseId,
+    description,
+    expiresAt,
+    isLoggedIn,
+    onCardClick,
+  }) => {
     return (
       <div
         className={clsx(
@@ -10,7 +18,7 @@ const FormCard = memo(
           'hover:shadow-xl hover:-translate-y-1 cursor-pointer',
           isLoggedIn ? 'border-indigo-400' : 'border-gray-200'
         )}
-        onClick={() => onCardClick(id)}
+        onClick={() => onCardClick(id, responseId)}
         aria-label={`${title} 설문 보기`}
       >
         <h3 className='text-lg font-semibold text-gray-900 mb-2 line-clamp-2'>

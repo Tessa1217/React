@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback, memo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { logout } from '@/features/auth/model/auth.slice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,12 +7,14 @@ import {
   currentlyLoggedIn,
 } from '@/features/auth/model/auth.selector';
 import { HiOutlineLogout, HiOutlineLogin, HiUser } from 'react-icons/hi';
-const LoginHeader = () => {
+const LoginHeader = memo(() => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const name = useSelector(currentUserName);
   const isLoggedIn = useSelector(currentlyLoggedIn);
+
+  const handleLogin = useCallback(() => navigate('/login'), []);
 
   const handleLogout = useCallback(() => {
     dispatch(logout());
@@ -58,7 +60,7 @@ const LoginHeader = () => {
             <li>
               <button
                 className='bg-white flex justify-center items-center text-blue-600 px-3 py-1 rounded hover:bg-gray-100 transition cursor-pointer'
-                onClick={() => navigate('/login')}
+                onClick={handleLogin}
               >
                 <HiOutlineLogin size={20} /> <span>Login</span>
               </button>
@@ -68,5 +70,5 @@ const LoginHeader = () => {
       </ul>
     </nav>
   );
-};
-export default React.memo(LoginHeader);
+});
+export default LoginHeader;

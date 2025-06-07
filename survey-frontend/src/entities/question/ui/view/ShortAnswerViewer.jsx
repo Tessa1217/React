@@ -1,5 +1,5 @@
 import React from 'react';
-const ShortAnswerViewer = ({ value }) => {
+const ShortAnswerViewer = ({ value = '' }) => {
   return (
     <input
       type='text'

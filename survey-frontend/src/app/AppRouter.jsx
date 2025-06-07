@@ -9,6 +9,8 @@ import FormDetailPage from '@/pages/FormDetailPage';
 import ResponseListPage from '@/pages/ResponseListPage';
 import ResponseSubmitPage from '@/pages/ResponseSubmitPage';
 import ResponseDetailPage from '@/pages/ResponseDetailPage';
+import FormPage from '@/pages/FormPage';
+import ResponsePage from '@/pages/ResponsePage';
 
 const AppRouter = () => {
   return (
@@ -16,14 +18,18 @@ const AppRouter = () => {
       <Route path='/login' element={<LoginPage />} />
       <Route path='/signup' element={<SignupPage />} />
       <Route index element={<MainPage />} />
-      <Route element={<AuthGuard />}>
-        <Route path='/forms' element={<FormListPage />} />
-        <Route path='/forms/new' element={<FormEditorPage />} />
-        <Route path='/forms/:id' element={<FormDetailPage />} />
-        <Route path='/forms/:id/edit' element={<FormEditorPage />} />
-        <Route path='/responses' element={<ResponseListPage />} />
+      <Route path='/responses' element={<ResponsePage />}>
+        <Route index element={<ResponseListPage />} />
         <Route path='/responses/:id' element={<ResponseDetailPage />} />
         <Route path='/responses/take/:id' element={<ResponseSubmitPage />} />
+      </Route>
+      <Route element={<AuthGuard />}>
+        <Route path='/forms' element={<FormPage />}>
+          <Route index element={<FormListPage />} />
+          <Route path='/forms/new' element={<FormEditorPage />} />
+          <Route path='/forms/:id' element={<FormDetailPage />} />
+          <Route path='/forms/:id/edit' element={<FormEditorPage />} />
+        </Route>
       </Route>
       {/* 404 처리 */}
       <Route path='*' element={<div>Not Found</div>} />

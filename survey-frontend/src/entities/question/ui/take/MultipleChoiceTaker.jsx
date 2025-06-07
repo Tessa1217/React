@@ -1,4 +1,4 @@
-const MultipleChoiceTaker = ({ id, options = [], onChange }) => {
+const MultipleChoiceTaker = ({ id, options = [], onSelectedOptionChange }) => {
   return (
     <div className='space-y-2'>
       {options.map((option) => (
@@ -7,7 +7,7 @@ const MultipleChoiceTaker = ({ id, options = [], onChange }) => {
             type='radio'
             name={`radio_${id}`}
             value={option.id}
-            onChange={(e) => onChange(id, e.target.value)}
+            onChange={(e) => onSelectedOptionChange(id, e.target.value)}
           />
           <span>{option.optionText}</span>
         </label>

@@ -1,4 +1,4 @@
-import FormEditorContainer from '@/features/formEditor/ui/FormEditorContainer';
+import FormEditorContainer from '@/features/formEditor/container/FormEditorContainer';
 import { FormModeProvider } from '@/shared/contexts/FormModeContext';
 
 const FormEditorPage = () => {

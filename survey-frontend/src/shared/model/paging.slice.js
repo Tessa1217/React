@@ -7,8 +7,8 @@ const pagingSlice = createSlice({
   initialState,
   reducers: {
     setPaging: (state, { payload }) => {
-      const { key, paging } = payload;
-      state[key] = { ...state[key], ...paging };
+      const { key, pageInfo } = payload;
+      state[key] = { ...state[key], ...pageInfo };
     },
     setPagingNumber: (state, { payload }) => {
       const { key, page } = payload;

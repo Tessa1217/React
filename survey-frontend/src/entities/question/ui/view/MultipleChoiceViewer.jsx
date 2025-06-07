@@ -1,5 +1,5 @@
 import React from 'react';
-const MultipleChoiceViewer = ({ options, value }) => {
+const MultipleChoiceViewer = ({ options, selectedOption }) => {
   return (
     <div className='space-y-2'>
       {options.map((option) => (
@@ -7,7 +7,7 @@ const MultipleChoiceViewer = ({ options, value }) => {
           <input
             type='radio'
             disabled
-            checked={value === option.id}
+            checked={selectedOption === option.id}
             value={option.id}
           />
           <span>{option.optionText}</span>

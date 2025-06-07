@@ -1,12 +1,12 @@
 import React from 'react';
-const DropdownViewer = ({ id, options = [], value }) => {
+const DropdownViewer = ({ id, options = [], selectedOption = '' }) => {
   return (
     <div className='space-y-2'>
       <select
         id={id}
         className='mt-2 w-full px-3 py-2 border border-gray-300 rounded'
         disabled
-        value={value}
+        value={selectedOption}
       >
         {options.map((option) => (
           <option key={option.id} value={option.optionOrder}>

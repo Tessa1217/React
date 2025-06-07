@@ -1,4 +1,4 @@
-import ResponseListContainer from '@/features/responseList/ui/ResponseListContainer';
+import ResponseListContainer from '@/features/responseList/container/ResponseListContainer';
 const ResponseListPage = () => {
   return (
     <>

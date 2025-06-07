@@ -1,16 +1,9 @@
 import React from 'react';
-const LoginForm = ({
-  userId,
-  password,
-  onFormChange,
-  onSubmit,
-  isLoggingIn,
-}) => {
+const LoginForm = ({ register, onSubmit, isLoggingIn }) => {
   return (
     <div className='flex min-h-screen items-center justify-center bg-gray-100 px-4'>
       <div className='w-full max-w-md bg-white p-8 rounded-2xl shadow-xl space-y-6'>
         <h2 className='text-2xl font-bold text-gray-800 text-center'>로그인</h2>
-
         <form onSubmit={onSubmit} className='space-y-4'>
           <div>
             <label className='block text-sm font-medium text-gray-700'>
@@ -20,9 +13,7 @@ const LoginForm = ({
               type='userId'
               name='userId'
               className='mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none'
-              value={userId}
-              onChange={(e) => onFormChange(e)}
-              required
+              {...register('userId')}
             />
           </div>
 
@@ -34,9 +25,7 @@ const LoginForm = ({
               type='password'
               name='password'
               className='mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none'
-              value={password}
-              onChange={(e) => onFormChange(e)}
-              required
+              {...register('password')}
             />
           </div>
 

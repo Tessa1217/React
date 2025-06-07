@@ -60,12 +60,21 @@ const FormTable = memo(
                     <ButtonView
                       onViewButtonClick={() => onViewButtonClick(form.id)}
                     />
-                    <ButtonUpdate
-                      onUpdateButtonClick={() => onUpdateButtonClick(form.id)}
-                    />
-                    <ButtonDelete
-                      onDeleteButtonClick={() => onDeleteButtonClick(form.id)}
-                    />
+                    {form.hasResponse && (
+                      <>
+                        <ButtonUpdate
+                          onUpdateButtonClick={() =>
+                            onUpdateButtonClick(form.id)
+                          }
+                        />
+                        <ButtonDelete
+                          disabled={form.hasResponse}
+                          onDeleteButtonClick={() =>
+                            onDeleteButtonClick(form.id)
+                          }
+                        />
+                      </>
+                    )}
                   </td>
                 </tr>
               ))

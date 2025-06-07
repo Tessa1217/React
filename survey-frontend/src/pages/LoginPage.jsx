@@ -1,6 +1,6 @@
 import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import LoginFormContainer from '@/features/auth/ui/LoginFormContainer';
+import LoginFormContainer from '@/features/auth/container/LoginFormContainer';
 import { currentlyLoggedIn } from '@/features/auth/model/auth.selector';
 const LoginPage = () => {
   const isLoggedIn = useSelector(currentlyLoggedIn);

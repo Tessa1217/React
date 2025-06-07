@@ -1,85 +1,35 @@
-import { useMemo } from 'react';
-import ShortAnswerTaker from '@/entities/question/ui/take/ShortAnswerTaker';
-import CheckboxTaker from '@/entities/question/ui/take/CheckboxTaker';
-import ParagraphTaker from '@/entities/question/ui/take/ParagraphTaker';
-import DropdownTaker from '@/entities/question/ui/take/DropdownTaker';
-import MultipleChoiceTaker from '@/entities/question/ui/take/MultipleChoiceTaker';
+import { memo } from 'react';
 import QuestionMeta from '@/entities/question/ui/shared/QuestionMeta';
+import { QUESTION_TAKE_RENDERERS } from '@/entities/question/ui/take/questionTakeMap';
 
-const QuestionTakeCard = ({
-  id,
-  questionText,
-  isRequired,
-  type,
-  options = [],
-  answerText = '',
-  selectedOption,
-  onAnswerTextChange,
-  onSelectedOptionChange,
-  onSelectedOptionsChange,
-}) => {
-  const questionType = useMemo(() => {
-    switch (type) {
-      case 'SHORT_ANSWER':
-        return (
-          <ShortAnswerTaker
-            id={id}
-            value={answerText || ''}
-            onChange={onAnswerTextChange}
-          />
-        );
-      case 'CHECKBOX':
-        return (
-          <CheckboxTaker
-            id={id}
-            options={options}
-            selected={selectedOption || []}
-            onChange={onSelectedOptionsChange}
-          />
-        );
-      case 'MULTIPLE_CHOICE':
-        return (
-          <MultipleChoiceTaker
-            id={id}
-            options={options}
-            value={selectedOption || []}
-            onChange={onSelectedOptionChange}
-          />
-        );
-      case 'DROPDOWN':
-        return (
-          <DropdownTaker
-            id={id}
-            options={options}
-            value={selectedOption || ''}
-            onChange={onSelectedOptionChange}
-          />
-        );
-      case 'PARAGRAPH':
-        return (
-          <ParagraphTaker
-            id={id}
-            value={answerText || ''}
-            onChange={onAnswerTextChange}
-          />
-        );
-      default:
-        throw new Error('유효하지 않는 문제 옵션입니다.');
-    }
-  }, [
-    type,
+const QuestionTakeCard = memo(
+  ({
     id,
-    answerText,
+    questionText,
+    isRequired,
+    type,
+    options = [],
+    answerText = '',
     selectedOption,
+    onAnswerTextChange,
     onSelectedOptionChange,
     onSelectedOptionsChange,
-    onAnswerTextChange,
-    options,
-  ]);
-  return (
-    <QuestionMeta questionText={questionText} isRequired={isRequired}>
-      {questionType}
-    </QuestionMeta>
-  );
-};
+  }) => {
+    const TakeComponent = QUESTION_TAKE_RENDERERS[type];
+
+    return (
+      <QuestionMeta questionText={questionText} isRequired={isRequired}>
+        <TakeComponent
+          id={id}
+          options={options}
+          answerText={answerText}
+          selectedOption={selectedOption}
+          onAnswerTextChange={onAnswerTextChange}
+          onSelectedOptionChange={onSelectedOptionChange}
+          onSelectedOptionsChange={onSelectedOptionsChange}
+        />
+      </QuestionMeta>
+    );
+  }
+);
 export default QuestionTakeCard;

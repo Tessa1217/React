@@ -1,4 +1,9 @@
-const CheckboxTaker = ({ id, options = [], selected = [], onChange }) => {
+const CheckboxTaker = ({
+  id,
+  options = [],
+  selectedOption = [],
+  onSelectedOptionsChange,
+}) => {
   return (
     <div className='space-y-2'>
       {options.map((option) => (
@@ -10,8 +15,10 @@ const CheckboxTaker = ({ id, options = [], selected = [], onChange }) => {
           <input
             id={`${id}-${option.id}`}
             type='checkbox'
-            checked={selected.includes(option.id)}
-            onChange={(e) => onChange(id, option.id, e.target.checked)}
+            checked={selectedOption.includes(option.id)}
+            onChange={(e) =>
+              onSelectedOptionsChange(id, option.id, e.target.checked)
+            }
             className='accent-blue-600 w-4 h-4'
           />
           <span className='text-gray-800'>{option.optionText}</span>

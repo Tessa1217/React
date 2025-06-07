@@ -1,4 +1,4 @@
-import FormViewContainer from '@/features/formViewer/ui/FormViewContainer';
+import FormViewContainer from '@/features/formViewer/container/FormViewContainer';
 import { FormModeProvider } from '@/shared/contexts/FormModeContext';
 const FormDetailPage = () => {
   return (
