@@ -1,5 +1,7 @@
 package com.toy.survey.controller.survey;
 
+import java.util.List;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -70,6 +72,18 @@ public class SurveyFormController {
     surveyFormService.updateSurvey(formRequest);
     return ResponseEntity.ok().build();
   }
+
+  /**
+   * 설문지 삭제
+   *
+   * @param formIds 삭제할 설문지 ID가 담긴 리스트
+   * @return ResponseEntity<?> 응답 객체
+   */    
+  @PostMapping("/del")
+  public ResponseEntity<?> delSurvey(@RequestBody List<Long> formIds) {
+    surveyFormService.deleteSurvey(formIds);
+    return ResponseEntity.ok().build();
+  } 
     
   
 }

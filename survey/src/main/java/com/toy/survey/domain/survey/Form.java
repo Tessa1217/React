@@ -59,7 +59,7 @@ public class Form extends CommonSystemField {
   private LocalDate expiresAt;
 
   @Builder.Default
-  @OneToMany(mappedBy = "form", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "form", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Question> questionList = new ArrayList<>();
 
   public void addQuestions(List<Question> questions) {

@@ -20,6 +20,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -61,7 +62,8 @@ public class Question extends CommonSystemField {
   private OptionSet optionSet;
 
   @Builder.Default
-  @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+  @OrderBy("optionOrder ASC")
+  @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
   @BatchSize(size = 100)
   private List<OptionItem> optionList = new ArrayList<>();
 

@@ -51,7 +51,7 @@ public class FormUpdater {
 
     form.getQuestionList().removeAll(existingQuestionMap.values());
 
-    questionRepository.deleteAll(existingQuestionMap.values());    
+    // questionRepository.deleteAll(existingQuestionMap.values());    
   }  
 
   private Question generateNewQuestion(QuestionReq questionReq) {
@@ -92,7 +92,7 @@ public class FormUpdater {
 
     question.getOptionList().removeAll(existingMap.values());
 
-    optionItemRepository.deleteAll(existingMap.values());
+    // optionItemRepository.deleteAll(existingMap.values());
     
 
   }

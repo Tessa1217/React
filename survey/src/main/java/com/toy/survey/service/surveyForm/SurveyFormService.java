@@ -1,5 +1,7 @@
 package com.toy.survey.service.surveyForm;
 
+import java.util.List;
+
 import org.springframework.data.domain.Pageable;
 
 import com.toy.survey.dto.common.PageRes;
@@ -16,5 +18,7 @@ public interface SurveyFormService {
   void saveSurvey(FormReq formRequest);
 
   void updateSurvey(FormReq formRequest);
+
+  void deleteSurvey(List<Long> ids);
   
 }

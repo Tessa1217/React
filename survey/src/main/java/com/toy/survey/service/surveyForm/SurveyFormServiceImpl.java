@@ -1,5 +1,7 @@
 package com.toy.survey.service.surveyForm;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -76,6 +78,15 @@ public class SurveyFormServiceImpl implements SurveyFormService {
     formValidator.isFormOwnedByCurrentUser(userId, form);
     formUpdater.update(form, formRequest);
 
+  }
+
+  @Override
+  @Transactional
+  public void deleteSurvey(List<Long> ids) {
+    for (Long id : ids) {
+      Form form = formValidator.validForm(id);
+      formRepository.delete(form);
+    }
   }
  
 }
