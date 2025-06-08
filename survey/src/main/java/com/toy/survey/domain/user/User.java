@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.toy.survey.domain.common.CommonSystemField;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -46,7 +47,10 @@ public class User extends CommonSystemField {
   private String name;
 
   @Builder.Default
-  @ManyToMany(fetch = FetchType.LAZY)
+  @ManyToMany(fetch = FetchType.LAZY, cascade = {
+                CascadeType.PERSIST,
+                CascadeType.MERGE
+            })
   @JoinTable(
       name = "user_roles",
       joinColumns = @JoinColumn(name = "user_id"),
@@ -56,6 +60,11 @@ public class User extends CommonSystemField {
 
   public void setEncodedPassword(String encodedPassword) {
     this.password = encodedPassword;
+  }
+
+  public void setRole(Role role) {
+    this.roles.add(role);
+    role.setUser(this);
   }
 
 }

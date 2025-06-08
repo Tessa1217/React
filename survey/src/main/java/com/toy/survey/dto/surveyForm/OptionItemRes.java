@@ -20,11 +20,14 @@ public class OptionItemRes {
 
   private Integer optionOrder;
 
+  private Boolean isEtc;
+
   public static OptionItemRes fromEntity(OptionItem optionItem) {
     return OptionItemRes.builder()                     
                      .id(optionItem.getId())
                      .optionText(optionItem.getOptionText())
                      .optionOrder(optionItem.getOptionOrder())
+                     .isEtc(optionItem.getIsEtc())
                      .build();
   }
   

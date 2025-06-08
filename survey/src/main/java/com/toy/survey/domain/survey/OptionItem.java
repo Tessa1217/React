@@ -42,6 +42,9 @@ public class OptionItem extends CommonSystemField {
   @Column(name = "option_order")
   private Integer optionOrder;
 
+  @Column(name = "is_etc")
+  private Boolean isEtc;
+
   public void assignQuestion(Question question) {
     this.question = question;
   }

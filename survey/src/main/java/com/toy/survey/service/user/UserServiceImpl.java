@@ -9,12 +9,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.toy.survey.config.CustomUserPrincipal;
+import com.toy.survey.domain.user.Role;
 import com.toy.survey.domain.user.User;
 import com.toy.survey.dto.user.LoginUserReq;
 import com.toy.survey.dto.user.SignUpUserReq;
 import com.toy.survey.dto.user.UserRes;
+import com.toy.survey.enums.UserRoleType;
+import com.toy.survey.repository.user.RoleRepository;
 import com.toy.survey.repository.user.UserRepository;
 import com.toy.survey.util.JwtUtil;
 
@@ -27,6 +31,8 @@ public class UserServiceImpl implements UserService {
   private final PasswordEncoder encoder;
 
   private final UserRepository userRepository;
+
+  private final RoleRepository roleRepository;
 
   private final JwtUtil jwtUtil;
 
@@ -90,11 +96,20 @@ public class UserServiceImpl implements UserService {
    * @param req 회원가입 요청 DTO
    */  
   @Override
+  @Transactional
   public void signUp(SignUpUserReq req) {
     
     User user = req.toEntity();
     String encodedPassword = encoder.encode(user.getPassword());
+
+    Role userRole = roleRepository.findByName("ROLE_USER")
+        .orElseGet(() -> 
+            roleRepository.save(Role.builder().name(UserRoleType.ROLE_USER.getRoleName()).build())
+        );
+
+    user.setRole(userRole);
     user.setEncodedPassword(encodedPassword);
+
     userRepository.save(user);
                    
   }

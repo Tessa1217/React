@@ -63,9 +63,11 @@ public class FormAnswerFactory {
     return req.getSelectedOption().stream()
         .map(optionId -> {
           OptionItem option = findOptionItemFromQuestion(question, optionId);
+          String optionText = option.getIsEtc() ? req.getAnswerText() : null;
           return FormAnswer.builder()
               .question(question)
               .response(response)
+              .answerText(optionText)
               .selectedOption(option)
               .build();
         }).collect(Collectors.toList());

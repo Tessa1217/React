@@ -22,10 +22,13 @@ public class OptionItemReq {
 
   private Integer optionOrder;
 
+  private Boolean isEtc;
+
   public OptionItem toEntity() {
     return OptionItem.builder()                               
                      .optionText(optionText)
                      .optionOrder(optionOrder)
+                     .isEtc(isEtc)
                      .build();
   }
   

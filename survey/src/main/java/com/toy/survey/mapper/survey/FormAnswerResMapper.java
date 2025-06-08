@@ -31,9 +31,20 @@ public class FormAnswerResMapper {
               if (QuestionTypeGroup.SELECT_OPTION_GROUP == QuestionTypeGroup.findQuestionTypeGroup(questionType)) {
                 List<Long> selectedOptionIds = answerList.stream()
                                                       .map(ans -> ans.getSelectedOption().getId())
-                                                      .collect(Collectors.toList());            
+                                                      .collect(Collectors.toList());     
+                                                      
+
+
+                // 기타 응답 텍스트가 있다면 추출
+                String etcAnswerText = answerList.stream()
+                    .filter(ans -> ans.getSelectedOption() != null && ans.getSelectedOption().getIsEtc())
+                    .map(FormAnswer::getAnswerText)
+                    .findFirst()
+                    .orElse(null);
+
                 return FormAnswerRes.builder()
-                    .questionId(questionId)                          
+                    .questionId(questionId)               
+                    .answerText(etcAnswerText)           
                     .selectedOption(selectedOptionIds)
                     .build();                    
 

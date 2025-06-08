@@ -86,7 +86,7 @@ VALUES (1, 'DROPDOWN', '드롭다운', '드롭다운 (select) 유형', 5, NOW(),
 CREATE TABLE option_set (
     id BIGINT AUTO_INCREMENT PRIMARY KEY comment '공통 옵션 세트 ID',
     name VARCHAR(100) NOT NULL comment '공통 옵션 세트 명칭',
-    description TEXT comment '공통 옵션 세트 설명',
+    description TEXT comment '공통 옵션 세트 설명',    
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '생성일',
     created_by VARCHAR(100) comment '생성자',
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '수정일',
@@ -150,10 +150,11 @@ ALTER TABLE question COMMENT = '질문';
 
 -- 선택지 (객관식 등) 테이블
 CREATE TABLE option_item (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY comment '',
-    question_id BIGINT NOT NULL comment '',
-    option_text VARCHAR(255) NOT NULL comment '',
-    option_order INT comment '',
+    id BIGINT AUTO_INCREMENT PRIMARY KEY comment '옵션 ID',
+    question_id BIGINT NOT NULL comment '질문 ID',
+    option_text VARCHAR(255) NOT NULL comment '옵션 내용',
+    option_order INT comment '옵션 순서',
+    is_etc BOOLEAN DEFAULT FALSE comment '기타 여부',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '생성일',
     created_by VARCHAR(100) comment '생성자',
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '수정일',
@@ -187,6 +188,7 @@ CREATE TABLE form_response (
     user_id BIGINT NULL comment '사용자 ID',
     submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '응답 제출일',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '생성일',
+    anonymous_id CHAR(36) NULL comment '익명 사용자 ID',
     created_by VARCHAR(100) comment '생성자',
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '수정일',
     updated_by VARCHAR(100) comment '수정자',    
