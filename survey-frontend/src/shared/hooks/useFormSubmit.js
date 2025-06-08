@@ -6,6 +6,7 @@ import { useAppMutation } from '@/shared/hooks/useAppMutation';
 import { resetPaging } from '@/shared/model/paging.slice';
 export const useFormSubmit = ({
   formPayload,
+  getPayload,
   schema,
   mutateFn,
   showMessage = true,
@@ -28,13 +29,15 @@ export const useFormSubmit = ({
 
   const submit = useCallback(async () => {
     const payload = formPayload;
+    console.log(payload);
     const result = await schema.safeParseAsync(payload);
     if (!result.success) {
+      console.log(result.error?.issues);
       showFormErrorAlert(result.error?.issues[0]?.message);
       return;
     }
-    mutate(payload);
-  }, [mutate, formPayload, schema, showFormErrorAlert]);
+    mutate(getPayload ? getPayload() : payload);
+  }, [mutate, formPayload, getPayload, schema, showFormErrorAlert]);
 
   return { isSaving: isPending, submit };
 };

@@ -3,6 +3,7 @@ import { z } from 'zod';
 const optionSchema = z.object({
   id: z.number().optional(),
   optionText: z.string().trim().min(1, '옵션 내용은 필수값입니다.'),
+  isEtc: z.boolean().default(false),
   optionOrder: z.number().optional(),
 });
 

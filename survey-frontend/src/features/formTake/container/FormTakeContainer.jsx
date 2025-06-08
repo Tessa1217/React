@@ -39,6 +39,15 @@ const FormTakeContainer = () => {
 
   const { submit: handleSubmit, isSaving } = useFormSubmit({
     formPayload: formResponse,
+    getPayload: () => ({
+      ...formResponse,
+      formAnswers: formResponse.formAnswers.map((answer) => ({
+        ...answer,
+        selectedOption: answer.selectedOption?.map((opt) =>
+          typeof opt === 'object' ? opt.optionId : opt
+        ),
+      })),
+    }),
     schema: formResponseSchema,
     mutateFn: saveFormResponse,
     doResetPaging: false,

@@ -1,5 +1,6 @@
 import React from 'react';
 const DropdownViewer = ({ id, options = [], selectedOption = '' }) => {
+  console.log(selectedOption);
   return (
     <div className='space-y-2'>
       <select
@@ -9,7 +10,7 @@ const DropdownViewer = ({ id, options = [], selectedOption = '' }) => {
         value={selectedOption}
       >
         {options.map((option) => (
-          <option key={option.id} value={option.optionOrder}>
+          <option key={option.id} value={option.id}>
             {option.optionText}
           </option>
         ))}

@@ -1,14 +1,14 @@
 import { memo } from 'react';
-const AddOptionButton = memo(({ onAddOption, id }) => {
+
+const AddEtcOptionButton = memo(({ id, onAddEtcOption }) => {
   return (
     <button
       type='button'
-      onClick={() => onAddOption(id)}
+      onClick={() => onAddEtcOption(id, true)}
       className='text-blue-600 hover:underline mt-2 cursor-pointer'
     >
-      + 옵션 추가
+      + 기타 추가
     </button>
   );
 });
-
-export default AddOptionButton;
+export default AddEtcOptionButton;

@@ -12,7 +12,14 @@ const formAnswerSchema = z
     ]),
     isRequired: z.boolean(),
     answerText: z.string().optional(),
-    selectedOption: z.array(z.union([z.string(), z.number()])).optional(),
+    selectedOption: z
+      .array(
+        z.object({
+          optionId: z.union([z.string(), z.number()]),
+          isEtc: z.boolean().default(false),
+        })
+      )
+      .optional(),
   })
   .refine(
     (data) => {
@@ -28,6 +35,19 @@ const formAnswerSchema = z
     {
       message: '필수 설문은 반드시 응답해야 합니다.',
       path: ['isRequired'],
+    }
+  )
+  .refine(
+    (data) => {
+      const hasEtc = data.selectedOption?.some((option) => option.isEtc);
+      if (hasEtc) {
+        return !!(data.answerText && data.answerText.trim().length > 0);
+      }
+      return true; // 기타 옵션이 없으면 검증 통과
+    },
+    {
+      message: '기타 항목 선택 시 기타 항목에 대한 내용을 작성해주세요.',
+      path: ['answerText'],
     }
   );
 

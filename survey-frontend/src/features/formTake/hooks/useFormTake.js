@@ -42,21 +42,19 @@ export const useFormTake = (initial) => {
   );
 
   const updateSelectedOption = useCallback(
-    (qId, optionId) => {
-      console.log(qId);
-      console.log(optionId);
+    (qId, optionId, isEtc = false) => {
       updateFormResponse((draft) => {
         const { formAnswers } = draft;
         const answer = findQ(formAnswers, qId);
         if (!answer) return;
-        answer.selectedOption = [optionId];
+        answer.selectedOption = [{ optionId, isEtc }];
       });
     },
     [updateFormResponse, findQ]
   );
 
   const updateSelectedOptions = useCallback(
-    (qId, optionId, checked) => {
+    (qId, optionId, checked, isEtc = false) => {
       updateFormResponse((draft) => {
         const { formAnswers } = draft;
         const answer = findQ(formAnswers, qId);
@@ -67,7 +65,7 @@ export const useFormTake = (initial) => {
         }
         const index = answer.selectedOption.indexOf(optionId);
         if (checked && index === -1) {
-          answer.selectedOption.push(optionId);
+          answer.selectedOption.push({ optionId, isEtc });
         } else if (!checked && index !== -1) {
           answer.selectedOption.splice(index, 1);
         }
