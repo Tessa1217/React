@@ -18,7 +18,8 @@ const LoginHeader = memo(() => {
 
   const handleLogout = useCallback(() => {
     dispatch(logout());
-  }, [dispatch]);
+    navigate('/login');
+  }, [dispatch, navigate]);
 
   return (
     <nav className='flex items-center space-x-6 text-sm sm:text-base'>

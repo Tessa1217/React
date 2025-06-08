@@ -34,6 +34,7 @@ export const usePagingSync = ({ key, pageInfo, search }) => {
 
   const handleSearchChange = useCallback(
     (newSearch) => {
+      dispatch(setPagingNumber({ key, page: 0 }));
       dispatch(setSearchParams({ key, search: newSearch }));
     },
     [dispatch, key]

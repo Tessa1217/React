@@ -148,7 +148,11 @@ const SignUpFormContainer = memo(() => {
 
   // 폼 요청 핸들러
   const handleSubmitAfterValidate = (data) => {
-    showConfirmModal('I').then(() => signUp(data));
+    showConfirmModal('I').then((result) => {
+      if (result) {
+        signUp(data);
+      }
+    });
   };
 
   return (

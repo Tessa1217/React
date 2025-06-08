@@ -5,8 +5,8 @@ const FormMetaEditor = memo(
   ({
     title,
     description,
-    isPublic,
-    requiresLogin,
+    isPublic = false,
+    requiresLogin = false,
     expiresAt,
     onChange,
     onChangeCheckbox,
@@ -82,7 +82,7 @@ const FormMetaEditor = memo(
           <input
             type='date'
             name='expiresAt'
-            value={expiresAt}
+            value={expiresAt || ''}
             onChange={(e) => onChange(e)}
             className='border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
           />

@@ -29,10 +29,8 @@ export const useFormSubmit = ({
 
   const submit = useCallback(async () => {
     const payload = formPayload;
-    console.log(payload);
     const result = await schema.safeParseAsync(payload);
     if (!result.success) {
-      console.log(result.error?.issues);
       showFormErrorAlert(result.error?.issues[0]?.message);
       return;
     }

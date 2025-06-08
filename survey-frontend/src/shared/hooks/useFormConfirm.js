@@ -5,18 +5,13 @@ export default function useFormConfirm() {
   const { openModal } = useModal();
 
   const generateConfirmMsg = useCallback((type) => {
-    switch (type) {
-      case 'I':
-        return '등록하시겠습니까?';
-      case 'U':
-        return '수정하시겠습니까?';
-      case 'S':
-        return '저장하시겠습니까?';
-      case 'D':
-        return '삭제하시겠습니까?';
-      default:
-        throw new Error('정해지지 않은 컨펌 타입니다.');
-    }
+    const confirmMsgMap = {
+      I: '등록하시겠습니까?',
+      U: '수정하시겠습니까?',
+      S: '저장하시겠습니까?',
+      D: '삭제하시겠습니까?',
+    };
+    return confirmMsgMap[type] || '';
   }, []);
 
   const showConfirmModal = useCallback(

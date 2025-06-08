@@ -37,8 +37,6 @@ export const useAppMutation = (mutationFn, options = { isLoading: true }) => {
 
       if (options.onError) return options.onError(error, ...args);
 
-      console.log(error);
-
       const { data: errorData } = error?.response || {};
       openModal({
         id: 'alertModal',
@@ -58,8 +56,7 @@ export const useAppMutation = (mutationFn, options = { isLoading: true }) => {
       if (options.showMessage == true) {
         await showSuccessAlert();
       }
-
-      if (options.onSuccess) options.onSuccess(data, ...args);
+      options.onSuccess?.(data, ...args);
     },
   });
 };

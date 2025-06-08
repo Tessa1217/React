@@ -5,6 +5,7 @@ import { fetchFormById } from '@/entities/form/model/form.api';
 import { useFormMeta } from '@/features/formEditor/hooks/useFormMeta';
 import { useQuestionEditor } from '@/features/formEditor/hooks/useQuestionEditor';
 import { useFormSubmit } from '@/shared/hooks/useFormSubmit';
+import useFormConfirm from '@/shared/hooks/useFormConfirm';
 import { formSchema } from '@/features/formEditor/lib/formEditorSchema';
 import {
   saveForm,
@@ -15,6 +16,7 @@ import FormEditor from '@/features/formEditor/ui/FormEditor';
 const FormEditorContainer = () => {
   const navigate = useNavigate();
   const { id: formId } = useParams();
+  const showConfirmModal = useFormConfirm();
 
   const { form, setForm, handleChange, handleChangeCheckbox } = useFormMeta({
     title: '',
@@ -74,6 +76,12 @@ const FormEditorContainer = () => {
     },
   });
 
+  const handleSave = useCallback(() => {
+    showConfirmModal('S').then((result) => {
+      if (result) handleSubmit();
+    });
+  }, [showConfirmModal, handleSubmit]);
+
   return (
     <FormEditor
       form={form}
@@ -89,7 +97,7 @@ const FormEditorContainer = () => {
       onRemoveOption={removeOption}
       type={type}
       onTypeChange={setTypeChange}
-      onSave={handleSubmit}
+      onSave={handleSave}
       onCancel={handleCancel}
     />
   );
