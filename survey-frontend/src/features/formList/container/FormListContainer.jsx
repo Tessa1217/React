@@ -10,10 +10,11 @@ import {
 import { useAppQuery } from '@/shared/hooks/useAppQuery';
 import { useAppMutation } from '@/shared/hooks/useAppMutation';
 import { useQueryClient } from '@tanstack/react-query';
-import useFormConfirm from '@/shared/hooks/useFormConfirm';
+import useFormConfirm, { ConfirmType } from '@/shared/hooks/useFormConfirm';
 import FormList from '@/features/formList/ui/FormList';
 
 const FormListContainer = () => {
+  // Outlet에서 key(페이징 상태 키) 받아옴
   const { key } = useOutletContext();
   const paging = useSelector(selectPagingByKey(key));
   const showConfirmModal = useFormConfirm();
@@ -25,6 +26,9 @@ const FormListContainer = () => {
 
   const queryKey = [key, currentPage, search];
 
+  /**
+   * 설문 목록 조회 API 요청 함수
+   */
   const queryFn = useCallback(async () => {
     const { data } = await fetchFormList({
       currentPage,
@@ -34,16 +38,23 @@ const FormListContainer = () => {
     return { formList, appliedSearch, pageInfo };
   }, [currentPage, search]);
 
+  // 설문 목록 조회 (React Query)
   const { data } = useAppQuery(queryKey, queryFn);
 
   const { formList = [], appliedSearch = {}, pageInfo } = data || [];
 
+  /**
+   * 검색 및 페이징 상태 동기화
+   */
   const { handlePageChange, handleSearchChange } = usePagingSync({
     key,
     pageInfo,
     appliedSearch,
   });
 
+  /**
+   * 설문 상세보기
+   */
   const handleViewButtonClick = useCallback(
     (formId) => {
       navigate(`/forms/${formId}`);
@@ -51,6 +62,9 @@ const FormListContainer = () => {
     [navigate]
   );
 
+  /**
+   * 설문 수정 페이지 이동
+   */
   const handleUpdateButtonClick = useCallback(
     (formId) => {
       navigate(`/forms/${formId}/edit`);
@@ -58,6 +72,9 @@ const FormListContainer = () => {
     [navigate]
   );
 
+  /**
+   * 설문 삭제
+   */
   const { mutate: delSurvey } = useAppMutation(deleteForm, {
     showMessage: true,
     onSuccess: () => {
@@ -65,9 +82,12 @@ const FormListContainer = () => {
     },
   });
 
+  /**
+   * 설문 삭제 클릭 시 확인 모달 → 확인 시 삭제 실행
+   */
   const handleDeleteButtonClick = useCallback(
     (id) => {
-      showConfirmModal('D').then((result) => {
+      showConfirmModal(ConfirmType.DELETE).then((result) => {
         if (result) {
           delSurvey(id);
         }
@@ -76,6 +96,9 @@ const FormListContainer = () => {
     [delSurvey, showConfirmModal]
   );
 
+  /**
+   * 새 설문 생성 페이지로 이동
+   */
   const handleInsertButtonClick = useCallback(
     () => navigate('/forms/new'),
     [navigate]

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+/** 설문 답변 스키마 */
 const formAnswerSchema = z
   .object({
     questionId: z.number(),
@@ -51,6 +52,7 @@ const formAnswerSchema = z
     }
   );
 
+/** 설문 응답 스키마 */
 export const formResponseSchema = z.object({
   formId: z.number(),
   formAnswers: z.array(formAnswerSchema),

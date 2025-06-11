@@ -14,11 +14,13 @@ const LoginHeader = memo(() => {
   const name = useSelector(currentUserName);
   const isLoggedIn = useSelector(currentlyLoggedIn);
 
+  // 로그인 페이지로 이동하는 핸들러
   const handleLogin = useCallback(() => navigate('/login'), []);
 
+  // 로그아웃 처리 후 로그인 페이지로 이동
   const handleLogout = useCallback(() => {
-    dispatch(logout());
-    navigate('/login');
+    dispatch(logout()); // 로그인 상태 초기화
+    navigate('/login'); // 로그인 페이지로 이동
   }, [dispatch, navigate]);
 
   return (

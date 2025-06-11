@@ -1,16 +1,33 @@
 import { useImmer } from 'use-immer';
 import { useCallback } from 'react';
 
+/**
+ * 설문 문항 편집을 위한 커스텀 훅
+ *
+ * @param {Array} initial - 초기 질문 리스트
+ * @returns {Object} questions 상태 및 편집 관련 함수들
+ */
 export const useQuestionEditor = (initial) => {
   const [questions, updateQuestions] = useImmer(initial);
 
+  /**
+   * 외부에서 질문 리스트를 직접 설정할 수 있는 함수
+   */
   const setQuestions = useCallback(
     (newQs) => updateQuestions(() => newQs),
     [updateQuestions]
   );
 
+  /**
+   * 질문 ID로 질문 객체 찾기
+   */
   const findQ = useCallback((draft, id) => draft.find((q) => q.id === id), []);
 
+  /**
+   * 질문 추가
+   *
+   * @param {string} type - 질문 유형 (e.g., 'MULTIPLE_CHOICE')
+   */
   const addQuestion = useCallback(
     (type) => {
       updateQuestions((draft) => {
@@ -27,6 +44,11 @@ export const useQuestionEditor = (initial) => {
     [updateQuestions]
   );
 
+  /**
+   * 질문 제거
+   *
+   * @param {number} id - 삭제할 질문의 ID
+   */
   const removeQuestion = useCallback(
     (id) => {
       updateQuestions((draft) => {
@@ -39,6 +61,9 @@ export const useQuestionEditor = (initial) => {
     [updateQuestions]
   );
 
+  /**
+   * 질문 텍스트 수정
+   */
   const updateQuestionText = useCallback(
     (id, text) => {
       updateQuestions((draft) => {
@@ -51,6 +76,9 @@ export const useQuestionEditor = (initial) => {
     [findQ, updateQuestions]
   );
 
+  /**
+   * 필수 여부 토글
+   */
   const updateRequired = useCallback(
     (id, required) => {
       updateQuestions((draft) => {
@@ -63,6 +91,12 @@ export const useQuestionEditor = (initial) => {
     [findQ, updateQuestions]
   );
 
+  /**
+   * 보기 추가 (기타 포함 가능)
+   *
+   * @param {number} id - 질문 ID
+   * @param {boolean} isEtc - 기타 항목 여부
+   */
   const addOption = useCallback(
     (id, isEtc = false) => {
       updateQuestions((draft) => {
@@ -118,6 +152,9 @@ export const useQuestionEditor = (initial) => {
     [findQ, updateQuestions]
   );
 
+  /**
+   * 보기 텍스트 수정
+   */
   const updateOptionText = useCallback(
     (qid, oid, text) => {
       updateQuestions((draft) => {
@@ -129,6 +166,9 @@ export const useQuestionEditor = (initial) => {
     [findQ, updateQuestions]
   );
 
+  /**
+   * 보기 제거
+   */
   const removeOption = useCallback(
     (qid, oid) => {
       updateQuestions((draft) => {

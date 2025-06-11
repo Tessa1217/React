@@ -12,7 +12,7 @@ import {
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import useFormConfirm from '@/shared/hooks/useFormConfirm';
+import useFormConfirm, { ConfirmType } from '@/shared/hooks/useFormConfirm';
 import useFormAlert from '@/shared/hooks/useFormAlert';
 
 const schema = z.object({
@@ -148,7 +148,7 @@ const SignUpFormContainer = memo(() => {
 
   // 폼 요청 핸들러
   const handleSubmitAfterValidate = (data) => {
-    showConfirmModal('I').then((result) => {
+    showConfirmModal(ConfirmType.INSERT).then((result) => {
       if (result) {
         signUp(data);
       }

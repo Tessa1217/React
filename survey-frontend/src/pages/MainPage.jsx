@@ -27,12 +27,14 @@ const MainPage = memo(() => {
     fetchFormQueryFn,
     {
       enabled: !!loggedIn,
+      staleTime: 5000,
     }
   );
 
   const { data: responseListResponse } = useAppQuery(
     ['mainResponseList'],
-    fetchResponseQueryFn
+    fetchResponseQueryFn,
+    { staleTime: 10000 }
   );
 
   const handleResponseCardClick = useCallback(
