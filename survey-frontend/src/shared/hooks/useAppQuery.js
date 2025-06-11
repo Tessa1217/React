@@ -68,7 +68,7 @@ export const useAppQuery = (key, queryFn, options = {}) => {
   const hasShownErrorRef = useRef(false);
 
   /**
-   * 에러 발생 시 alert 모달 출력 + 뒤로 가기 처리
+   * 에러 발생 시 alert 모달 출력 + 메인으로 가기 처리
    */
   useEffect(() => {
     if (isError && !hasShownErrorRef.current) {
@@ -80,7 +80,8 @@ export const useAppQuery = (key, queryFn, options = {}) => {
         title: '오류가 발생했습니다.',
         description: error?.message || '알 수 없는 오류가 발생했습니다.',
       }).then(() => {
-        navigate(-1);
+        // 메인 처리 말고 오류마다 다르게 처리 필요
+        navigate('/');
       });
     }
   }, [dispatch, isError, error, openModal, navigate]);
