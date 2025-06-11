@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import { createLogger } from 'redux-logger';
+// import { createLogger } from 'redux-logger';
 
 import pagingReducer from '@/shared/model/paging.slice';
 import authReducer from '@/features/auth/model/auth.slice';
@@ -14,7 +14,8 @@ const persistConfig = {
   blackList: ['paging', 'auth'],
 };
 
-const logger = createLogger();
+// 로깅 미들웨어
+// const logger = createLogger();
 
 const middleware = (getDefaultMiddleware) => {
   const middlewares = getDefaultMiddleware({
