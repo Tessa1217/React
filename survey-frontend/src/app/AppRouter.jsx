@@ -1,16 +1,18 @@
 import { Routes, Route } from 'react-router-dom';
 import AuthGuard from '@/shared/router/AuthGuard';
 import MainPage from '@/pages/MainPage';
-import LoginPage from '@/pages/LoginPage';
-import SignupPage from '@/pages/SignupPage';
-import FormListPage from '@/pages/FormListPage';
-import FormEditorPage from '@/pages/FormEditorPage';
-import FormDetailPage from '@/pages/FormDetailPage';
-import ResponseListPage from '@/pages/ResponseListPage';
-import ResponseSubmitPage from '@/pages/ResponseSubmitPage';
-import ResponseDetailPage from '@/pages/ResponseDetailPage';
-import FormPage from '@/pages/FormPage';
-import ResponsePage from '@/pages/ResponsePage';
+import LoginPage from '@/pages/user/LoginPage';
+import SignupPage from '@/pages/user/SignupPage';
+import FormPage from '@/pages/form/FormPage';
+import FormListPage from '@/pages/form/FormListPage';
+import FormEditorPage from '@/pages/form/FormEditorPage';
+import FormDetailPage from '@/pages/form/FormDetailPage';
+import ResponsePage from '@/pages/response/ResponsePage';
+import ResponseListPage from '@/pages/response/ResponseListPage';
+import ResponseSubmitPage from '@/pages/response/ResponseSubmitPage';
+import ResponseDetailPage from '@/pages/response/ResponseDetailPage';
+import NotFoundPage from '@/pages/error/NotFoundPage';
+import ServerErrorPage from '@/pages/error/ServerErrorPage';
 
 const AppRouter = () => {
   return (
@@ -31,8 +33,10 @@ const AppRouter = () => {
           <Route path='/forms/:id/edit' element={<FormEditorPage />} />
         </Route>
       </Route>
+      {/* 500 처리 */}
+      <Route path='/error' element={<ServerErrorPage />} />
       {/* 404 처리 */}
-      <Route path='*' element={<div>Not Found</div>} />
+      <Route path='*' element={<NotFoundPage />} />
     </Routes>
   );
 };

@@ -3,7 +3,7 @@ import { useModal } from '@/shared/hooks/useModal';
 import { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { startLoading, stopLoading } from '@/shared/model/loading.slice';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 /**
  * 공통 API 조회 훅
@@ -65,6 +65,7 @@ export const useAppQuery = (key, queryFn, options = {}) => {
   }, [useQueryResult.isSuccess, dispatch]);
 
   const { isError, error } = useQueryResult;
+  const { onError } = options;
   const hasShownErrorRef = useRef(false);
 
   /**
@@ -80,11 +81,15 @@ export const useAppQuery = (key, queryFn, options = {}) => {
         title: '오류가 발생했습니다.',
         description: error?.message || '알 수 없는 오류가 발생했습니다.',
       }).then(() => {
-        // 메인 처리 말고 오류마다 다르게 처리 필요
-        navigate('/');
+        // 오류 콜백 넘길 시 error 페이지 이동 말고 오류마다 다르게 처리
+        if (onError) {
+          onError();
+          return;
+        }
+        navigate('/error');
       });
     }
-  }, [dispatch, isError, error, openModal, navigate]);
+  }, [dispatch, onError, isError, error, openModal, navigate]);
 
   /**
    * 에러 상태 초기화되면 플래그도 초기화
