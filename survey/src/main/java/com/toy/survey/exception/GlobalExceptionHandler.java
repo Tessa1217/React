@@ -7,13 +7,18 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
-@RestControllerAdvice
+import io.swagger.v3.oas.annotations.Hidden;
+
+@Hidden
+@RestControllerAdvice(annotations = RestController.class)
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class) 
-    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {        
         String message = ex.getBindingResult().getAllErrors()
                            .stream()
@@ -23,6 +28,17 @@ public class GlobalExceptionHandler {
                            .orElse("유효하지 않은 정보입니다.");                
         return Map.of("message", message);
     }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleHandlerMethodValidation(HandlerMethodValidationException ex) {
+        String message = ex.getAllErrors()
+                        .stream()
+                        .findFirst()
+                        .map(error -> error.getDefaultMessage())
+                        .orElse("요청 값이 올바르지 않습니다.");
+        return Map.of("message", message);
+    }    
 
     @ExceptionHandler(UnauthorizedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)

@@ -4,13 +4,11 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -32,6 +30,14 @@ public class SecurityConfig {
 
   private final CustomUserDetailService customUserDetailService;
 
+  private final String[] swaggerPaths = {
+          "/v3/api-docs/**",
+          "/swagger-ui/**",
+          "/swagger-ui.html",
+          "/api-docs/**", // ← springdoc.yml 에 설정한 커스텀 경로
+          "/api-info.html"    
+  };
+
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable)
@@ -40,6 +46,8 @@ public class SecurityConfig {
         .anonymous(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(
           (authorize) -> authorize
+                            .requestMatchers(swaggerPaths)
+                            .permitAll()
                             .requestMatchers("/user/**")
                             .permitAll()                            
                             .requestMatchers("/survey/response/**")

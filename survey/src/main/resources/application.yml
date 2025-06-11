@@ -6,6 +6,8 @@ spring:
     url: jdbc:mysql://localhost:3306/survey?allowPublicKeyRetrieval=true&useSSL=false
     username: root
     password: fusion!@34
+  thymeleaf:
+    check-template-location: false
   jpa:
     open-in-view: false
     show-sql: false
@@ -19,6 +21,22 @@ spring:
         highlight_sql: true
         format_sql: true
         use_sql_comments: true
+
+springdoc:
+  packages-to-scan: com.toy.survey
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  cache:
+    disabled: true
+  api-docs:
+    path: /api-docs/json
+    groups:
+      enabled: true
+  swagger-ui:
+    enabled: true
+    path: /api-info.html
+    tags-sorter: alpha DESC
+    operations-sorter: alpha
 
 logging:
   level:
